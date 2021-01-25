@@ -8,7 +8,9 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "babel-plugin-component": "^1.1.1",
     "core-js": "^3.6.5",
+    "element-plus": "^1.0.1-alpha.19",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0"
@@ -22,7 +24,10 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/test-utils": "^2.0.0-0",
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.4",
     "typescript": "~3.9.3",
+    "vue-cli-plugin-element-plus": "~0.0.12",
     "vue-jest": "^5.0.0-0"
   },
   "browserslist": [
