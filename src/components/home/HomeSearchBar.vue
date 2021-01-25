@@ -4,20 +4,34 @@
       <el-col :span="2"></el-col>
       <el-col :span="20">
         <el-tabs type="border-card">
-          <el-tab-pane label="用户管理"
+          <el-tab-pane label="航班预定"
             ><notice-bar
               ><div style="text-align: right">
                 <el-button type="text">详情</el-button>
               </div></notice-bar
             >
             <el-row style="width: 95%; margin-top: 30px">
-              <el-space direction="vertical" alignment="start" :size="30">
-                <el-radio-group v-model="orderType">
-                  <el-radio :label="1">单程</el-radio>
-                  <el-radio :label="2">往返</el-radio>
-                  <el-radio :label="3">多程</el-radio>
-                </el-radio-group>
-              </el-space>
+              <el-col :span="12" style="text-align: left">
+                <el-space direction="vertical" alignment="start" :size="30">
+                  <el-radio-group v-model="orderType">
+                    <el-radio :label="1">单程</el-radio>
+                    <el-radio :label="2">往返</el-radio>
+                    <el-radio :label="3">多程</el-radio>
+                  </el-radio-group>
+                </el-space>
+              </el-col>
+              <el-col :span="12" style="text-align: right">
+                <el-button class="text-item" @click="openDrawer">
+                  <strong
+                    >{{ airlineName }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    乘客类型:儿童{{
+                      customSettingUnion.childrenNum
+                    }}人&nbsp;成人{{
+                      customSettingUnion.adultNum
+                    }}人&nbsp;婴儿{{ customSettingUnion.infant }}人</strong
+                  >
+                </el-button>
+              </el-col>
             </el-row>
             <el-row>
               <home-airline-order
@@ -42,18 +56,75 @@
               <el-col :span="8"></el-col>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="配置管理">配置管理</el-tab-pane>
+          <el-tab-pane label="航班动态">座位选择</el-tab-pane>
           <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-          <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+          <!-- <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane> -->
         </el-tabs>
       </el-col>
       <el-col :span="2"></el-col>
     </el-row>
   </div>
+
+  <el-drawer
+    title="机票查询设定"
+    v-model="drawer"
+    :direction="direction"
+    :before-close="handleClose"
+    destroy-on-close
+  >
+    <el-row>
+      <el-col :span="6">
+        航班类型：
+        <el-select
+          v-model="customSettingUnion.airlineType"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="6">
+        儿童：
+        <el-input-number
+          v-model="customSettingUnion.childrenNum"
+          @change="handleChange"
+          :min="0"
+          :max="10"
+          label="描述文字"
+        ></el-input-number>
+      </el-col>
+      <el-col :span="6">
+        成人：
+        <el-input-number
+          v-model="customSettingUnion.adultNum"
+          @change="handleChange"
+          :min="0"
+          :max="10"
+          label="描述文字"
+        ></el-input-number>
+      </el-col>
+      <el-col :span="6">
+        婴儿：
+        <el-input-number
+          v-model="customSettingUnion.infant"
+          @change="handleChange"
+          :min="0"
+          :max="10"
+          label="描述文字"
+        ></el-input-number>
+      </el-col>
+    </el-row>
+  </el-drawer>
 </template>
 
 <script lang="ts">
 import {
+  computed,
   getCurrentInstance,
   provide,
   reactive,
@@ -64,11 +135,21 @@ import {
 } from "vue";
 import NoticeBar from "../commons/NoticeBar.vue";
 import HomeAirlineOrder from "@/components/home/HomeAirlineOrder.vue";
-import { AlreadyOrderItem } from "@/components/HomeClass.ts";
+import { AlreadyOrderItem, CustomSet } from "@/components/HomeClass.ts";
 import MessageBox from "element-plus/lib/el-message-box";
 import { VueWithProps } from "vue-class-component";
 export default {
   components: { NoticeBar, HomeAirlineOrder },
+  data() {
+    return {
+      options: [
+        { value: 0, label: "经济舱/超经济舱" },
+        { value: 1, label: "公务/头等舱" },
+        { value: 2, label: "公务舱" },
+        { value: 3, label: "头等舱" },
+      ],
+    };
+  },
   setup() {
     const app = getCurrentInstance()?.appContext.config.globalProperties;
     const orderType = ref(1);
@@ -78,9 +159,15 @@ export default {
     };
     //order list part
     let flag = ref(false);
+    const customSettingUnion = reactive(new CustomSet(0, 1, 0, 0));
+    const airlineName = computed(() => {
+      return ["经济舱/超经济舱", "公务/头等舱", "公务舱", "头等舱"][
+        customSettingUnion.airlineType
+      ];
+    });
     provide("isShowDelete", readonly(flag)); //delete button will be displayed according to flag
     const alreadyOrderList = ref([
-      reactive(new AlreadyOrderItem("wzn", "sxb")),
+      reactive(new AlreadyOrderItem("wzn", "sxb", new Date())),
     ]);
     const addOrderItem = () => {
       let list: AlreadyOrderItem[] = alreadyOrderList.value;
@@ -95,7 +182,7 @@ export default {
             });
           },
         });
-      } else list.push(reactive(new AlreadyOrderItem("", "")));
+      } else list.push(reactive(new AlreadyOrderItem("", "", new Date())));
     };
     const deleteAirOrder = (index: number) => {
       let list = alreadyOrderList.value;
@@ -125,7 +212,7 @@ export default {
         length = nn - length;
         while (length > 0) {
           length--;
-          list.push(reactive(new AlreadyOrderItem("", "")));
+          list.push(reactive(new AlreadyOrderItem("", "", new Date())));
         }
       }
       console.log(alreadyOrderList.value);
@@ -133,12 +220,25 @@ export default {
     watch(alreadyOrderList.value, (nn, oo) => {
       console.log(nn);
     });
+
+    //drawer
+    const drawer = ref(false);
+    const direction = ref("btt");
+    const openDrawer = (event: { target: { blur: () => void } }) => {
+      drawer.value = true;
+      event.target.blur();
+    };
     return {
       orderType,
       swapAddress,
       alreadyOrderList,
       addOrderItem,
       deleteAirOrder,
+      airlineName,
+      customSettingUnion,
+      drawer,
+      direction,
+      openDrawer,
     };
   },
 };
@@ -151,5 +251,9 @@ export default {
 .card {
   margin-top: 30px;
   height: 100%;
+}
+.text-item {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 </style>

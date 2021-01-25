@@ -16,7 +16,16 @@
         <div style="height: 40px"></div>
       </div>
     </el-main>
-    <el-footer>xxxxx</el-footer>
+    <el-footer style="height: 240px">
+      <FooterNotice></FooterNotice>
+      <div style="height: 80px">
+        <el-divider content-position="right"></el-divider>
+        <div style="text-align: center; font-size: 20px; color: #909399">
+          <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+        </div>
+        <el-divider content-position="right">阿里云</el-divider>
+      </div>
+    </el-footer>
   </el-container>
 </template>
 
@@ -27,6 +36,7 @@ import HomeImageNav from "@/components/home/HomeImageNav";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeSearchBar from "@/components/home/HomeSearchBar";
 import HomeAMap from "@/components/home/HomeAMap";
+import FooterNotice from "@/components/home/footer/FooterNotice";
 import { provide, ref } from "vue";
 export default {
   name: "App",
@@ -37,6 +47,7 @@ export default {
     HomeBanner,
     HomeSearchBar,
     HomeAMap,
+    FooterNotice,
   },
   setup(props) {
     const notice = ref("warning!");

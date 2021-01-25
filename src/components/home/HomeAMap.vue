@@ -5,17 +5,39 @@
       <el-col :span="4">
         <el-row>
           <el-col :span="23">
-            <el-input placeholder="请输入内容" v-model="placeObj.departure">
-              <template #prepend>出发地</template>
-            </el-input>
+            <el-select
+              v-model="placeObj.departure"
+              filterable
+              placeholder="请选择出发地"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="1"></el-col>
         </el-row>
         <el-row>
           <el-col :span="23">
-            <el-input placeholder="请输入内容" v-model="placeObj.destination">
-              <template #prepend>目的地</template>
-            </el-input>
+            <el-select
+              v-model="placeObj.destination"
+              filterable
+              placeholder="请选择目的地"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="1"></el-col>
         </el-row>
@@ -52,11 +74,11 @@
 </template>
 
 <script>
-import { inject } from "vue";
+import { inject, reactive } from "vue";
 import { AlreadyOrderItem } from "../HomeClass";
 export default {
   setup() {
-    const placeObj = inject("placeObj", {
+    const placeObj = reactive({
       departure: "",
       destination: "",
     });
@@ -68,11 +90,34 @@ export default {
       currentDate: (() => {
         return new Date().toString().substring(0, 10);
       })(),
+      value: "",
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕",
+        },
+        {
+          value: "选项2",
+          label: "双皮奶",
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎",
+        },
+        {
+          value: "选项4",
+          label: "龙须面",
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭",
+        },
+      ],
     };
   },
   methods: {
     initMap: function () {
-      this.map = new AMap.Map("container", {
+      let map = new AMap.Map("container", {
         zoom: 18, //级别
         center: [116.397428, 39.90923], //中心点坐标
         viewMode: "3D", //使用3D视图

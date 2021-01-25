@@ -1,10 +1,18 @@
 <template>
-  <el-container style="height: 100px; width: 100%; margin: 0%; padding: 0%">
-    <el-row>
-      <el-col :span="4"> </el-col>
-      <el-col :span="4">
+  <div
+    style="
+      height: 100px;
+      width: 100%;
+      margin: 0%;
+      padding: 0%;
+      background: white;
+    "
+  >
+    <el-row style="height: 80px">
+      <el-col :span="3"> </el-col>
+      <el-col :span="5">
         <el-image
-          style="width: 200px; height: 100px"
+          style="width: 250px; height: 80px"
           :src="url"
           :fit="fit"
         ></el-image>
@@ -17,22 +25,26 @@
         <p>举报电话:{{ tel.hotLineTel }}</p>
       </el-col>
     </el-row>
-  </el-container>
+
+    <el-row style="height: 20px; background: #2579d0"></el-row>
+  </div>
 </template>
 
 <script>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
+import airlinePic from "@/assets/airline-mark.jpg";
 export default {
   setup() {
     const tel = reactive({
       serviceTel: "12821",
       hotLineTel: "1057-1231545645",
     });
+    const url = ref(airlinePic);
 
     onMounted(() => {
       //todo:get tel
     });
-    return { tel };
+    return { tel, url };
   },
 };
 </script>
