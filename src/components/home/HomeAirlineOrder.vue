@@ -3,6 +3,7 @@
     <el-col :span="7"
       ><el-cascader
         style="width: 100%"
+        filterable
         v-model="value"
         :options="options"
         :props="props"
@@ -68,18 +69,92 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject } from "vue";
-
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  toRefs,
+  watch,
+} from "vue";
+import { CityListModel, CityModel, ResponseModel } from "../HomeClass";
+import axios from "axios";
 export default defineComponent({
   props: {
     ordertype: Number,
   },
   emits: ["remove"],
   setup(props, ctx) {
-    const flag: boolean = inject("isShowDelete", false);
-    return { flag };
+    const flag = inject("isShowDelete", false);
+    let { options } = cascaderUse();
+    return { flag, options };
   },
 });
+
+interface OptionInterface {
+  label: string;
+  value: string;
+  children: {
+    label: string;
+    value: string;
+  }[];
+}
+
+//cascader part
+const cascaderUse = () => {
+  const values = reactive({
+    cityList: [{ code: "a", cityList: [{ cityId: "", cityName: "" }] }],
+    visitedCityList: [{ cityId: "", cityName: "" }],
+  });
+  const options = computed(() => {
+    let cityMap: OptionInterface[] = values.cityList.map((cityList) => {
+      return {
+        label: cityList.code,
+        value: cityList.code,
+        children: cityList.cityList.map((city) => {
+          return {
+            label: city.cityName,
+            value: city.cityId,
+          };
+        }),
+      };
+    });
+    console.log(cityMap);
+
+    let visitedMap: OptionInterface[] = [
+      {
+        label: "曾去地",
+        value: "曾去地",
+        children: values.visitedCityList.map((city) => {
+          return {
+            label: city.cityName,
+            value: city.cityId,
+          };
+        }),
+      },
+    ];
+
+    return visitedMap.concat(cityMap);
+  });
+  const valuesRefs = toRefs(values);
+  onMounted(async () => {
+    let [res, res2] = await Promise.all([
+      axios.get<ResponseModel<CityListModel>>("/api/getAllCity"),
+      axios.get<ResponseModel<CityModel>>("/api/getAllVisitedCity"),
+    ]);
+    let [data, data2] = [res.data, res2.data];
+    // console.log(data);
+    if (data.statusCode == 200 && data2.statusCode == 200) {
+      values.cityList = data.data;
+      values.visitedCityList = data2.data;
+    }
+  });
+  return {
+    valuesRefs,
+    options,
+  };
+};
 </script>
 
 <style scoped>

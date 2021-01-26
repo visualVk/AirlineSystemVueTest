@@ -1,3 +1,5 @@
+import { computed, ComputedRef } from "vue"
+
 export class AlreadyOrderItem {
   public departure: String
   public destination: String
@@ -20,4 +22,40 @@ export class CustomSet {
     this.infant = i
     this.airlineType = type
   }
+}
+
+export interface CascaderObjChild {
+  value: String
+  label: String
+  // constructor(v:String,l:String){
+  //   this.value = v
+  //   this.label = l
+  // }
+}
+
+export interface CascaderChildrenInterface {
+  value: String
+  label: String
+}
+
+export interface CascaderInterface {
+  cityList: Array<CascaderChildrenInterface>,
+  visitedCityList: Array<CascaderChildrenInterface>,
+  options: ComputedRef<Array<CascaderChildrenInterface>>
+}
+
+export interface ResponseModel<T> {
+  statusCode: number,
+  data: Array<T>,
+  meta?: string
+}
+
+export interface CityModel {
+  cityId: string,
+  cityName: string
+}
+
+export interface CityListModel {
+  code: string,
+  cityList: Array<CityModel>
 }
