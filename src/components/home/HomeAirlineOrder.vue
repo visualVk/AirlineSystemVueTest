@@ -4,19 +4,23 @@
       ><el-cascader
         style="width: 100%"
         filterable
-        v-model="value"
+        v-model="orderSearchObj.departure"
         :options="options"
         :props="props"
         @change="handleChange"
       ></el-cascader
     ></el-col>
     <el-col :span="3"
-      ><el-button @click="swapAddress" icon="el-icon-refresh" circle></el-button
+      ><el-button
+        @click="$emit('swapAddress')"
+        icon="el-icon-refresh"
+        circle
+      ></el-button
     ></el-col>
     <el-col :span="7"
       ><el-cascader
         style="width: 100%"
-        v-model="value"
+        v-model="orderSearchObj.destination"
         :options="options"
         :props="props"
         @change="handleChange"
@@ -26,7 +30,7 @@
     <el-col :span="5">
       <el-date-picker
         style="width: 100%"
-        v-model="value2"
+        v-model="orderSearchObj.date"
         align="right"
         type="date"
         placeholder="选择日期"
@@ -44,28 +48,6 @@
       ></el-button>
     </el-col>
   </el-row>
-  <!-- <div class="block">
-    <el-cascader
-      v-model="value"
-      :options="options"
-      :props="props"
-      @change="handleChange"
-    ></el-cascader>
-    <span class="demonstration"
-      >&#160;<el-button
-        @click="swapAddress"
-        icon="el-icon-refresh"
-        circle
-      ></el-button
-      >&#160;</span
-    >
-    <el-cascader
-      v-model="value"
-      :options="options"
-      :props="props"
-      @change="handleChange"
-    ></el-cascader>
-  </div> -->
 </template>
 
 <script lang="ts">
@@ -78,11 +60,25 @@ import {
   toRefs,
   watch,
 } from "vue";
-import { CityListModel, CityModel, ResponseModel } from "../HomeClass";
+import {
+  AlreadyOrderItem,
+  CityListModel,
+  CityModel,
+  ResponseModel,
+} from "../HomeClass";
 import axios from "axios";
+import { HomeServiceApi, OptionInterface } from "@/utils/api/HomeServiceApi";
 export default defineComponent({
   props: {
     ordertype: Number,
+    orderSearchObj: {
+      type: AlreadyOrderItem,
+      default: {
+        departure: "",
+        destination: "",
+        date: new Date(),
+      },
+    },
   },
   emits: ["remove"],
   setup(props, ctx) {
@@ -91,15 +87,6 @@ export default defineComponent({
     return { flag, options };
   },
 });
-
-interface OptionInterface {
-  label: string;
-  value: string;
-  children: {
-    label: string;
-    value: string;
-  }[];
-}
 
 //cascader part
 const cascaderUse = () => {
@@ -120,7 +107,6 @@ const cascaderUse = () => {
         }),
       };
     });
-    console.log(cityMap);
 
     let visitedMap: OptionInterface[] = [
       {
@@ -139,15 +125,16 @@ const cascaderUse = () => {
   });
   const valuesRefs = toRefs(values);
   onMounted(async () => {
-    let [res, res2] = await Promise.all([
-      axios.get<ResponseModel<CityListModel>>("/api/getAllCity"),
-      axios.get<ResponseModel<CityModel>>("/api/getAllVisitedCity"),
+    let [allCityResult, allVistedCityResult] = await Promise.all([
+      HomeServiceApi.fingAllCity(),
+      HomeServiceApi.findAllVisitedCity(),
     ]);
-    let [data, data2] = [res.data, res2.data];
-    // console.log(data);
-    if (data.statusCode == 200 && data2.statusCode == 200) {
-      values.cityList = data.data;
-      values.visitedCityList = data2.data;
+    if (
+      allCityResult.statusCode == 200 &&
+      allVistedCityResult.statusCode == 200
+    ) {
+      values.cityList = allCityResult.data;
+      values.visitedCityList = allVistedCityResult.data;
     }
   });
   return {

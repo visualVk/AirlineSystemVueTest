@@ -76,6 +76,7 @@
 <script>
 import { inject, reactive } from "vue";
 import { AlreadyOrderItem } from "../HomeClass";
+import { HomeServiceApi } from "@/utils/api/HomeServiceApi";
 export default {
   setup() {
     const placeObj = reactive({
@@ -123,9 +124,21 @@ export default {
         viewMode: "3D", //使用3D视图
       });
     },
+    loadCity: async function () {
+      let res = await HomeServiceApi.fingAllCity();
+      if (res.statusCode == 200) {
+        this.options = res.data.flatMap((cityList) => {
+          return cityList.cityList.map((city) => {
+            return { value: city.cityId, label: city.cityName };
+          });
+        });
+      }
+    },
+    submitSearch: function () {},
   },
   mounted() {
     this.initMap();
+    this.loadCity();
   },
 };
 </script>

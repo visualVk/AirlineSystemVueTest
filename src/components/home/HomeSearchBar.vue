@@ -38,7 +38,9 @@
                 style="width: 100%"
                 v-for="(item, index) in alreadyOrderList"
                 :key="index"
+                :orderSearchObj="item"
                 @remove="deleteAirOrder(index)"
+                @swapAddress="swapAddress(index, this)"
               ></home-airline-order>
             </el-row>
             <el-row v-if="orderType == 3"
@@ -56,8 +58,10 @@
               <el-col :span="8"></el-col>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="航班动态">座位选择</el-tab-pane>
-          <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+          <el-tab-pane label="航班动态"
+            ><airline-information></airline-information
+          ></el-tab-pane>
+          <!-- <el-tab-pane label="角色管理">角色管理</el-tab-pane> -->
           <!-- <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane> -->
         </el-tabs>
       </el-col>
@@ -136,10 +140,11 @@ import {
 import NoticeBar from "../commons/NoticeBar.vue";
 import HomeAirlineOrder from "@/components/home/HomeAirlineOrder.vue";
 import { AlreadyOrderItem, CustomSet } from "@/components/HomeClass.ts";
+import AirlineInformation from "@/components/home/AirlineInformation.vue";
 import MessageBox from "element-plus/lib/el-message-box";
 import { VueWithProps } from "vue-class-component";
 export default {
-  components: { NoticeBar, HomeAirlineOrder },
+  components: { NoticeBar, HomeAirlineOrder, AirlineInformation },
   data() {
     return {
       options: [
@@ -153,10 +158,7 @@ export default {
   setup() {
     const app = getCurrentInstance()?.appContext.config.globalProperties;
     const orderType = ref(1);
-    const swapAddress = (event: { target: { blur: () => void } }) => {
-      console.log(event.target);
-      event.target.blur();
-    };
+
     //order list part
     let flag = ref(false);
     const customSettingUnion = reactive(new CustomSet(0, 1, 0, 0));
@@ -167,12 +169,19 @@ export default {
     });
     provide("isShowDelete", readonly(flag)); //delete button will be displayed according to flag
     const alreadyOrderList = ref([
-      reactive(new AlreadyOrderItem("wzn", "sxb", new Date())),
+      reactive(new AlreadyOrderItem("", "", new Date())),
     ]);
+    const swapAddress = (index: number) => {
+      // event.target.blur();
+      let tmp = alreadyOrderList.value[index].departure;
+      alreadyOrderList.value[index].departure =
+        alreadyOrderList.value[index].destination;
+      alreadyOrderList.value[index].destination = tmp;
+      console.log(tmp);
+    };
     const addOrderItem = () => {
       let list: AlreadyOrderItem[] = alreadyOrderList.value;
       if (list.length >= 5) {
-        console.log(app);
         app?.$alert("最多同时订购5张", "前排提示", {
           confirmButtonText: "确定",
           callback: (action: any) => {
@@ -215,10 +224,6 @@ export default {
           list.push(reactive(new AlreadyOrderItem("", "", new Date())));
         }
       }
-      console.log(alreadyOrderList.value);
-    });
-    watch(alreadyOrderList.value, (nn, oo) => {
-      console.log(nn);
     });
 
     //drawer
