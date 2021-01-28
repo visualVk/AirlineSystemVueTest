@@ -33,19 +33,23 @@
       :key="index"
       :orderSearchObj="item"
       @remove="deleteAirOrder(index)"
-      @swapAddress="swapAddress(index, this)"
+      @swapAddress="swapAddress(index)"
     ></home-airline-order>
   </el-row>
   <el-row v-if="orderType == 3"
     ><el-button type="primary" @click="addOrderItem">添加</el-button></el-row
   >
-  <el-row style="margin-top: 20px">
+  <el-row style="margin-top: 20px; margin-bottom: 20px">
     <el-col :span="8"></el-col>
-    <el-col :span="8"
-      ><el-button icon="el-icon-search" type="primary" round
+    <el-col :span="8">
+      <el-button
+        icon="el-icon-search"
+        type="primary"
+        @click="queryAirline"
+        round
         >搜索</el-button
-      ></el-col
-    >
+      >
+    </el-col>
     <el-col :span="8"></el-col>
   </el-row>
 
@@ -87,7 +91,7 @@
         <el-input-number
           v-model="customSettingUnion.adultNum"
           @change="handleChange"
-          :min="0"
+          :min="1"
           :max="10"
           label="描述文字"
         ></el-input-number>
@@ -117,6 +121,7 @@ import {
   readonly,
   Ref,
   ref,
+  SetupContext,
   watch,
 } from "vue";
 import NoticeBar from "@/components/commons/NoticeBar.vue";
@@ -124,6 +129,7 @@ import HomeAirlineOrder from "@/components/home/HomeAirlineOrder.vue";
 import {
   AlreadyOrderItemInterface,
   CustomInterface,
+  queryAirlineConditionInterface,
 } from "@/components/home/HomeSearchPanel/HomeSearchPanelObj.ts";
 
 export default defineComponent({
@@ -141,7 +147,7 @@ export default defineComponent({
       ],
     };
   },
-  setup() {
+  setup(props, ctx) {
     const { customSettingUnion, airlineName } = useCustomerUnion();
     const { drawer, direction, openDrawer } = useDrawer();
     const {
@@ -151,7 +157,8 @@ export default defineComponent({
       swapAddress,
       addOrderItem,
       deleteAirOrder,
-    } = useOrderList();
+      queryAirline,
+    } = useOrderList(ctx, customSettingUnion);
     return {
       customSettingUnion,
       airlineName,
@@ -164,10 +171,14 @@ export default defineComponent({
       swapAddress,
       addOrderItem,
       deleteAirOrder,
+      queryAirline,
     };
   },
 });
-const useOrderList = () => {
+const useOrderList = (
+  ctx: SetupContext,
+  customSettingUnion: CustomInterface
+) => {
   const app = getCurrentInstance()?.appContext.config.globalProperties;
   const orderType = ref(1);
   const flag = ref(false);
@@ -175,13 +186,14 @@ const useOrderList = () => {
   const alreadyOrderList: Ref<Array<AlreadyOrderItemInterface>> = ref([
     { departure: "", destination: "", date: new Date() },
   ]);
+  //method
   const swapAddress = (index: number) => {
     // event.target.blur();
     let tmp = alreadyOrderList.value[index].departure;
     alreadyOrderList.value[index].departure =
       alreadyOrderList.value[index].destination;
     alreadyOrderList.value[index].destination = tmp;
-    // console.log(tmp);
+    console.log(tmp);
   };
   const addOrderItem = () => {
     let list: AlreadyOrderItemInterface[] = alreadyOrderList.value;
@@ -213,6 +225,23 @@ const useOrderList = () => {
     }
     list.splice(index, 1);
   };
+  const queryAirline = () => {
+    const query: Array<queryAirlineConditionInterface> = alreadyOrderList.value.map(
+      (od: AlreadyOrderItemInterface) => {
+        let q: queryAirlineConditionInterface = {
+          departure: od.departure,
+          destination: od.destination,
+          date: od.date,
+          airlineType: customSettingUnion.airlineType,
+          hasAdult: true,
+          hasChild: customSettingUnion.childrenNum > 0,
+          hasinfant: customSettingUnion.infant > 0,
+        };
+        return q;
+      }
+    );
+    ctx.emit("queryAirline", query);
+  };
   watch(orderType, (nn, oo) => {
     //change value of isShowDelete accordding to ordetype(e.g. 1=>single,2=>double,3=>mulitply)
     let list = alreadyOrderList.value;
@@ -236,6 +265,7 @@ const useOrderList = () => {
     swapAddress,
     addOrderItem,
     deleteAirOrder,
+    queryAirline,
   };
 };
 const useDrawer = () => {

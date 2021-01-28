@@ -4,6 +4,7 @@ import router from './router'
 import installElementPlus from '../src/plugins/element'
 import '@/static/airline-theme.css'
 import MessageBox from 'element-plus/lib/el-message-box'
+import Message from 'element-plus/lib/el-message'
 
 const app = createApp(App)
 installElementPlus(app)

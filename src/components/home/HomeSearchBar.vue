@@ -5,7 +5,7 @@
       <el-col :span="20">
         <el-tabs type="border-card">
           <el-tab-pane label="航班预定">
-            <HomeSearchPanel></HomeSearchPanel>
+            <HomeSearchPanel @queryAirline="queryAirline"></HomeSearchPanel>
           </el-tab-pane>
           <el-tab-pane label="航班动态"
             ><airline-information></airline-information
@@ -34,6 +34,11 @@ import NoticeBar from "../commons/NoticeBar.vue";
 import HomeAirlineOrder from "@/components/home/HomeAirlineOrder.vue";
 import AirlineInformation from "@/components/home/AirlineInformation.vue";
 import HomeSearchPanel from "@/components/home/HomeSearchPanel/HomeSearchPanel.vue";
+import {
+  AlreadyOrderItemInterface,
+  queryAirlineConditionInterface,
+} from "./HomeSearchPanel/HomeSearchPanelObj";
+import { Router, useRouter } from "vue-router";
 export default {
   components: {
     NoticeBar,
@@ -45,8 +50,18 @@ export default {
     return {};
   },
   setup() {
-    return {};
+    const router = useRouter();
+    const { queryAirline } = useAirlineOrder(router);
+    return { queryAirline };
   },
+};
+
+const useAirlineOrder = (router: Router) => {
+  const queryAirline = (obj: queryAirlineConditionInterface) => {
+    //TODO: 表单验证
+    router.push("/queryAirline");
+  };
+  return { queryAirline };
 };
 </script>
 

@@ -1,5 +1,6 @@
 <template>
   <el-row style="width: 100%">
+    <el-col :span="1" style="color: red" v-show="isWarning">*</el-col>
     <el-col :span="7"
       ><el-cascader
         style="width: 100%"
@@ -27,7 +28,7 @@
       ></el-cascader
     ></el-col>
     <el-col :span="1"></el-col>
-    <el-col :span="5">
+    <el-col :span="4">
       <el-date-picker
         style="width: 100%"
         v-model="orderSearchObj.date"
@@ -54,9 +55,11 @@
 import {
   computed,
   defineComponent,
+  getCurrentInstance,
   inject,
   onMounted,
   reactive,
+  ref,
   toRefs,
   watch,
 } from "vue";
@@ -66,7 +69,6 @@ import {
   CityModel,
   ResponseModel,
 } from "../HomeClass";
-import axios from "axios";
 import { HomeServiceApi, OptionInterface } from "@/utils/api/HomeServiceApi";
 export default defineComponent({
   props: {
@@ -80,11 +82,31 @@ export default defineComponent({
       },
     },
   },
+  data() {
+    return {
+      props: {
+        emitPath: false,
+      },
+    };
+  },
   emits: ["remove"],
   setup(props, ctx) {
     const flag = inject("isShowDelete", false);
     let { options } = cascaderUse();
-    return { flag, options };
+    const orderObj = props.orderSearchObj;
+    const isWarning = ref(false);
+    const app = getCurrentInstance()?.appContext.config.globalProperties;
+    watch(orderObj, (oo, nn) => {
+      if (nn.destination == nn.departure) {
+        isWarning.value = true;
+        app?.$alert("same", "警告", {
+          confirmButtonText: "确定",
+        });
+      } else {
+        isWarning.value = false;
+      }
+    });
+    return { flag, options, isWarning };
   },
 });
 
@@ -147,5 +169,9 @@ const cascaderUse = () => {
 <style scoped>
 .el-row {
   margin-bottom: 20px;
+}
+.warning-border {
+  border: 1px;
+  border-color: red;
 }
 </style>

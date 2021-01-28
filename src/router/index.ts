@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import HomeElMain from '@/views/home/HomeElMain.vue'
+import SearchElMain from '@/views/searchList/SearchElMain.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,6 +9,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: HomeElMain
   },
+  {
+    path: '/queryAirline',
+    name: 'QueryAirline',
+    component: SearchElMain
+  }
   // {
   //   path: '/home',
   //   name: 'HomeElMain',

@@ -4,9 +4,11 @@ import service from "../axios";
 export interface OptionInterface {
   label: string;
   value: string;
+  disable?: boolean
   children: {
     label: string;
     value: string;
+    disable?: boolean
   }[];
 }
 
