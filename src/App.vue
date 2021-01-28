@@ -8,13 +8,7 @@
       <HomeImageNav></HomeImageNav>
     </el-header>
     <el-main style="padding: 0%; margin: 0%">
-      <div style="overflow-y: auto; height: 100%">
-        <home-banner></home-banner><home-search-bar></home-search-bar>
-        <home-a-map></home-a-map>
-        <!-- <div style="height: 900px; background: red"></div>
-        <div style="height: 300px; background: blue"></div> -->
-        <div style="height: 40px"></div>
-      </div>
+      <router-view></router-view>
     </el-main>
     <el-footer style="height: 240px">
       <FooterNotice></FooterNotice>
@@ -33,9 +27,6 @@
 import HelloWorld from "./components/HelloWorld.vue";
 import HomeNav from "@/components/home/HomeNav";
 import HomeImageNav from "@/components/home/HomeImageNav";
-import HomeBanner from "@/components/home/HomeBanner";
-import HomeSearchBar from "@/components/home/HomeSearchBar";
-import HomeAMap from "@/components/home/HomeAMap";
 import FooterNotice from "@/components/home/footer/FooterNotice";
 import { provide, ref } from "vue";
 export default {
@@ -44,9 +35,6 @@ export default {
     HelloWorld,
     HomeNav,
     HomeImageNav,
-    HomeBanner,
-    HomeSearchBar,
-    HomeAMap,
     FooterNotice,
   },
   setup(props) {
