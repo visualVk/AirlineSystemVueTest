@@ -7,9 +7,9 @@
           <el-tab-pane label="航班预定">
             <HomeSearchPanel @queryAirline="queryAirline"></HomeSearchPanel>
           </el-tab-pane>
-          <el-tab-pane label="航班动态"
-            ><airline-information></airline-information
-          ></el-tab-pane>
+          <el-tab-pane label="航班动态">
+            <airline-information></airline-information>
+          </el-tab-pane>
           <!-- <el-tab-pane label="角色管理">角色管理</el-tab-pane> -->
           <!-- <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane> -->
         </el-tabs>
