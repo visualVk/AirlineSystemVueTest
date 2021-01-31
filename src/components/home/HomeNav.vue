@@ -12,7 +12,12 @@
       <el-col :span="8">
         <el-row>
           <el-space alignment="start" size="20" spacer="|" id="buttog-group">
-            <el-button type="text">登录/注册</el-button>
+            <el-button type="text" v-if="isLogin" @click="profileBtn"
+              >尊敬的客户</el-button
+            >
+            <el-button type="text" v-else @click="loginBtn"
+              >登录/注册</el-button
+            >
             <el-button
               type="text"
               icon="el-icon-message-solid"
@@ -46,10 +51,38 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import "@/utils/store/store.ts";
+import { stores } from "@/utils/store/store.ts";
+import { useRouter } from "vue-router";
 export default {
   setup() {
-    return {};
+    const { isLogin } = useCommons();
+    const { loginBtn, profileBtn } = useLoginAndProfile();
+    return { isLogin, loginBtn, profileBtn };
   },
+};
+
+const useLoginAndProfile = () => {
+  const router = useRouter();
+  const loginBtn = () => {};
+  const profileBtn = () => {
+    router.push("/profile");
+  };
+  return {
+    loginBtn,
+    profileBtn,
+  };
+};
+
+/**
+ * others
+ */
+const useCommons = () => {
+  const isLogin = ref(stores.isLogin);
+  return {
+    isLogin,
+  };
 };
 </script>
 

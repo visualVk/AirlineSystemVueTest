@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import HomeElMain from '@/views/home/HomeElMain.vue'
 import SearchElMain from '@/views/searchList/SearchElMain.vue'
+import ProfileElMain from '@/views/profile/ProfileElMain.vue'
+import ProfileDisplayMain from "@/components/profile/Main/ProfileDisplayMain/ProfileDisplayMain.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -22,6 +24,18 @@ const routes: Array<RouteRecordRaw> = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '@/components/home/HomeElMain.vue')
   // }
+  , {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfileElMain,
+    children: [
+      {
+        path: '/me',
+        name: 'ProfileMe',
+        component: ProfileDisplayMain
+      }
+    ]
+  }
 ]
 
 const router = createRouter({

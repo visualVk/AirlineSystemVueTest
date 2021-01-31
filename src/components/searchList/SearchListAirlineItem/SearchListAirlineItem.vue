@@ -19,14 +19,14 @@
       <el-col :span="6" style="line-height: 40px">
         <el-row>
           <el-col :span="8" style="text-align: center">
-            <div><span>时间{{}}</span></div>
-            <div>xx{{}}</div>
+            <div><span>出发地{{}}</span></div>
+            <div>时间{{}}</div>
           </el-col>
           <el-col :span="8" style="line-height: 80px; text-align: center">
             <i class="el-icon-right"></i>
           </el-col>
           <el-col :span="8" style="text-align: center">
-            <div>时间{{}}</div>
+            <div>目的地{{}}</div>
             <div>时间{{}}</div>
           </el-col>
         </el-row>
@@ -82,7 +82,7 @@ export default defineComponent({
 const useCommons = () => {
   const isShow = ref(false);
   const closeAndShowBtnText = computed(() => {
-    return isShow ? "收起" : "展开";
+    return isShow.value ? "收起" : "展开";
   });
   return { isShow, closeAndShowBtnText };
 };
