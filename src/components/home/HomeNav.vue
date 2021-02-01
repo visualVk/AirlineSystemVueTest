@@ -22,6 +22,7 @@
               type="text"
               icon="el-icon-message-solid"
               style="color: #909399"
+              @click="msgBtn"
             >
               <el-badge is-dot>消息</el-badge>
             </el-button>
@@ -29,18 +30,21 @@
               type="text"
               icon="el-icon-s-ticket"
               style="color: #909399"
+              @click="couponBtn"
               >优惠券</el-button
             >
             <el-button
               type="text"
               icon="el-icon-s-management"
               style="color: #909399"
+              @click="orderBtn"
               >我的订单</el-button
             >
             <el-button
               type="text"
               icon="el-icon-s-custom"
               style="color: #909399"
+              @click="serviceBtn"
               >客服中心</el-button
             >
           </el-space>
@@ -50,24 +54,42 @@
   </el-container>
 </template>
 
-<script>
+<script lang='ts'>
 import { ref } from "vue";
 import "@/utils/store/store.ts";
 import { stores } from "@/utils/store/store.ts";
-import { useRouter } from "vue-router";
+import { Router, useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const { isLogin } = useCommons();
-    const { loginBtn, profileBtn } = useLoginAndProfile();
-    return { isLogin, loginBtn, profileBtn };
+    const { loginBtn, profileBtn } = useLoginAndProfile(router);
+    const { orderBtn } = useOrder(router);
+    const { msgBtn } = useMsg(router);
+    return { isLogin, loginBtn, profileBtn, orderBtn, msgBtn };
   },
 };
 
-const useLoginAndProfile = () => {
-  const router = useRouter();
+const useOrder = (router: Router) => {
+  const orderBtn = () => {
+    router.push({ name: "ProfileOrder" });
+  };
+  return { orderBtn };
+};
+
+const useMsg = (router: Router) => {
+  const msgBtn = () => {
+    router.push({ name: "ProfileMsg" });
+  };
+  return { msgBtn };
+};
+
+const useLoginAndProfile = (router: Router) => {
   const loginBtn = () => {};
   const profileBtn = () => {
-    router.push("/profile");
+    // router.push();
+    //=>/profile/me==1
+    router.push({ name: "ProfileMe" });
   };
   return {
     loginBtn,

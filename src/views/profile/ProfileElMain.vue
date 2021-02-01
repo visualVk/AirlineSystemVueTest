@@ -1,13 +1,4 @@
 <template>
-  <!-- <el-row>
-      <el-col :span="6" style="padding: 20px">
-        <AsideMenuNav @select="selectHandler"></AsideMenuNav>
-      </el-col>
-      <el-col :span="18" style="padding: 20px">
-        <router-view></router-view>
-      </el-col>
-    </el-row> -->
-
   <div style="overflow-y: auto; height: 100%; width: 100%">
     <el-container>
       <el-aside width="25%" style="padding: 20px">
@@ -21,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
 import AsideMenuNav from "@/components/profile/AsideMenuNav/AsideMenuNav.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -31,16 +22,19 @@ export default defineComponent({
   },
   setup() {
     const { selectHandler } = useAsideMenuNav();
+    const {} = useCommons();
     return { selectHandler };
   },
 });
 
+const useCommons = () => {
+  const route = useRoute();
+  return {};
+};
+
 const useAsideMenuNav = () => {
   const router = useRouter();
-  const selectHandler = (key: any, keyPath: any) => {
-    console.log(key, keyPath);
-    router.push("/me");
-  };
+  const selectHandler = (key: any, keyPath: any) => {};
   return { selectHandler };
 };
 </script>

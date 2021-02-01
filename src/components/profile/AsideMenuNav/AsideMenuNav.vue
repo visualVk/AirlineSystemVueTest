@@ -3,25 +3,30 @@
     <el-col :span="12"></el-col>
     <el-col :span="12">
       <el-menu
-        default-active="1"
+        :default-active="$route.path"
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
-        @select="$emit('select', key, keyPath)"
+        @select="selectHandler"
+        router
       >
-        <el-menu-item index="1">
+        <el-menu-item index="/me">
           <template #title>
             <i class="el-icon-location"></i>
             <span>个人主页首页</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item index="/order">
           <i class="el-icon-menu"></i>
           <template #title>订单</template>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="/msg">
           <i class="el-icon-document"></i>
           <template #title>我的消息</template>
+        </el-menu-item>
+        <el-menu-item index="/coupon">
+          <i class="el-icon-document"></i>
+          <template #title>优惠券</template>
         </el-menu-item>
         <el-submenu index="4">
           <template #title>
@@ -29,21 +34,31 @@
             <span>钱包</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="1-1">优惠券</el-menu-item>
             <el-menu-item index="1-2">安全设置</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
+        <el-menu-item index="/">
+          <template #title>
+            <i class="el-icon-location"></i>
+            <span>返回首页</span>
+          </template>
+        </el-menu-item>
       </el-menu>
     </el-col>
   </el-row>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, toRef } from "vue";
 
 export default defineComponent({
-  setup() {
-    return {};
+  props: {},
+  setup(props, ctx) {
+    const selectHandler = (key: any, keyPath: any) => {
+      ctx.emit("select", key, keyPath);
+    };
+
+    return { selectHandler };
   },
 });
 </script>
