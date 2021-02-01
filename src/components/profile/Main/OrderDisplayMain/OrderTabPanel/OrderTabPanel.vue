@@ -1,4 +1,7 @@
 <template>
+  <el-row>
+    <OrderSearchBar></OrderSearchBar>
+  </el-row>
   <!-- TODO: 之后要利用axios获取数据后，用数组进行for循环生成 -->
   <div class="order_list">
     <el-space direction="vertical" size="5">
@@ -25,10 +28,11 @@
 <script lang="ts">
 import { computed, defineComponent, toRef } from "vue";
 import OrderListItem from "@/components/profile/Main/OrderDisplayMain/OrderListItem/OrderListItem.vue";
-
+import OrderSearchBar from "@/components/profile/Main/OrderDisplayMain/OrderSearchBar/OrderSearchBar.vue";
 export default defineComponent({
   components: {
     OrderListItem,
+    OrderSearchBar,
   },
   props: {},
   setup(props) {
