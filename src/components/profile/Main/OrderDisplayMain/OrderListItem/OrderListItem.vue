@@ -34,7 +34,9 @@
     <el-row class="btn_row">
       <el-col :span="18"></el-col>
       <el-col :span="6" style="text-align: right">
-        <el-button style="margin-right: 5px">查看详情</el-button>
+        <el-button style="margin-right: 5px" @click="orderDetailBtn">
+          查看详情
+        </el-button>
       </el-col>
     </el-row>
   </div>
@@ -42,12 +44,22 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Router, useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
-    return {};
+    const router = useRouter();
+    const { orderDetailBtn } = useOrder(router);
+    return { orderDetailBtn };
   },
 });
+
+const useOrder = (router: Router) => {
+  const orderDetailBtn = () => {
+    router.push({ path: "/orderDetail" });
+  };
+  return { orderDetailBtn };
+};
 </script>
 
 <style scoped>

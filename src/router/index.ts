@@ -6,6 +6,7 @@ import ProfileElMain from '@/views/profile/ProfileElMain.vue'
 import ProfileDisplayMain from "@/components/profile/Main/ProfileDisplayMain/ProfileDisplayMain.vue";
 import OrderDisplayMain from '@/components/profile/Main/OrderDisplayMain/OrderDisplayMain.vue'
 import MsgDisplayMain from '@/components/profile/Main/MsgDisplayMain/MsgDisplayMain.vue'
+import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDetailMain.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,6 +42,11 @@ const routes: Array<RouteRecordRaw> = [
       }
     ]
   },
+  {
+    path: '/orderDetail',
+    name: 'OrderDetail',
+    component: OrderDetailMain
+  }
 
 ]
 
