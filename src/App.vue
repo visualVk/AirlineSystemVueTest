@@ -1,5 +1,5 @@
 <template>
-  <el-container id="home-container" style="margin: 0%">
+  <el-container id="home-container" style="margin: 0%" class="home_container">
     <el-header
       class="airline-bg-grey airline-text-color-black"
       style="height: 145px; margin: 0%; padding: 0%"
@@ -7,7 +7,7 @@
       <home-nav></home-nav>
       <HomeImageNav></HomeImageNav>
     </el-header>
-    <el-main style="padding: 0%; margin: 0%">
+    <el-main style="padding: 0%; margin: 0%" class="mainBox">
       <router-view></router-view>
     </el-main>
     <el-footer style="height: 240px">
@@ -61,6 +61,21 @@ body > #home-container {
   text-align: center;
   margin: 0%;
   padding: 0px;
+  height: 100%;
   /* line-height: 500px; */
+}
+html,
+body {
+  height: 100%;
+}
+#app {
+  height: 100%;
+}
+.content {
+  height: 100%;
+}
+.backtop {
+  overflow: scroll;
+  height: 100%;
 }
 </style>

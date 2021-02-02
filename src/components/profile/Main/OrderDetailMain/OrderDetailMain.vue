@@ -14,6 +14,7 @@
     <el-row style="margin-top: 20px">
       <el-col :span="3"></el-col>
       <el-col :span="11">
+        <!-- TODO: 以后要用axios获取添加属性 -->
         <OrderTicketDetailHead></OrderTicketDetailHead>
       </el-col>
       <el-col :span="1"></el-col>
