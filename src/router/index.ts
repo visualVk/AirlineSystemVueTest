@@ -7,6 +7,7 @@ import ProfileDisplayMain from "@/components/profile/Main/ProfileDisplayMain/Pro
 import OrderDisplayMain from '@/components/profile/Main/OrderDisplayMain/OrderDisplayMain.vue'
 import MsgDisplayMain from '@/components/profile/Main/MsgDisplayMain/MsgDisplayMain.vue'
 import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDetailMain.vue'
+import OrderMain from '@/components/Order/OrderMain.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,8 +19,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/queryAirline',
     name: 'QueryAirline',
     component: SearchElMain
-  }
-  ,
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: OrderMain
+  },
   {
     path: '/profile',
     name: 'Profile',

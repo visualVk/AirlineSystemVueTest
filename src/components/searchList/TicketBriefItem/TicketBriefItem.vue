@@ -38,6 +38,7 @@
               background-image: linear-gradient(90deg, #ffa50a, #f70);
               color: white;
             "
+            @click="orderBtn"
           >
             预定
           </el-button>
@@ -50,12 +51,22 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Router, useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
-    return {};
+    const router = useRouter();
+    const { orderBtn } = useCommons(router);
+    return { orderBtn };
   },
 });
+
+const useCommons = (router: Router) => {
+  const orderBtn = () => {
+    router.push({ path: "order" });
+  };
+  return { orderBtn };
+};
 </script>
 
 <style>
