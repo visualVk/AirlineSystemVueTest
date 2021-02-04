@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
         component: ProfileDisplayMain
       },
       {
-        path: '/order',
+        path: '/profileOrder',
         name: 'ProfileOrder',
         component: OrderDisplayMain
       },

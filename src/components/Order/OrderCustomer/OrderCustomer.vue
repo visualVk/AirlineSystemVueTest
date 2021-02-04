@@ -27,12 +27,12 @@
         <el-space size="large" direction="horizontal" wrap>
           <!-- TODO: 之后for循环生成常用乘客LIST -->
           <el-tag
-            v-for="o in customerList"
+            v-for="(o, index) in customerList"
             :key="o.idCard"
             closable
             type="info"
             effect="plain"
-            @close="deleteFromList(o)"
+            @close="deleteFromList(index)"
           >
             {{ o.name }}
           </el-tag>
@@ -40,18 +40,23 @@
       </div>
     </div>
     <div>
-      <el-form :model="form" label-width="80px">
+      <el-form
+        :model="form"
+        label-width="80px"
+        ref="customerForm"
+        :rules="formRules"
+      >
         <div
           style="background: white; padding: 10px; margin-top: 10px"
           class="form_shadow"
         >
-          <el-form-item label="姓名">
+          <el-form-item label="姓名" prop="name">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
-          <el-form-item label="身份证号">
+          <el-form-item label="身份证号" prop="idCard">
             <el-input v-model="form.idCard"></el-input>
           </el-form-item>
-          <el-form-item label="手机号">
+          <el-form-item label="手机号" prop="tel">
             <el-input v-model="form.tel"></el-input>
           </el-form-item>
         </div>
@@ -69,15 +74,20 @@
       </div>
     </div>
     <div>
-      <el-form :model="contactForm" ref="formss" label-width="80px">
+      <el-form
+        :model="contactForm"
+        ref="formss"
+        label-width="80px"
+        :rules="contactRules"
+      >
         <div
           style="background: white; padding: 10px; margin-top: 10px"
           class="form_shadow"
         >
-          <el-form-item label="身份证号">
+          <el-form-item label="身份证号" prop="idCard">
             <el-input v-model="contactForm.idCard"></el-input>
           </el-form-item>
-          <el-form-item label="手机号">
+          <el-form-item label="手机号" prop="tel">
             <el-input v-model="contactForm.tel"></el-input>
           </el-form-item>
         </div>
@@ -92,80 +102,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, Ref, toRef, toRefs } from "vue";
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  inject,
+  reactive,
+  ref,
+  Ref,
+  SetupContext,
+  toRef,
+  toRefs,
+  watch,
+} from "vue";
 import { Customer } from "@/components/Order/OrderCustomer/OrderCustomer.ts";
+import MessageBox from "element-plus/lib/el-message-box";
+import { EmitsOptions } from "@vue/test-utils/dist/mount";
+import { useCustomers } from "@/components/Order/OrderCustomer/UseOrderCustomer.ts";
 
 export default defineComponent({
-  setup() {
-    const {
-      contactForm,
-      commonCustomerList,
-      form,
-      formss,
-      customerList,
-      addCustomerBtn,
-      addToList,
-      deleteFromList,
-      nextBtn,
-    } = useCustomers();
-
-    return {
-      contactForm,
-      commonCustomerList,
-      customerList,
-      form,
-      formss,
-      addCustomerBtn,
-      addToList,
-      deleteFromList,
-      nextBtn,
-    };
+  emits: ["updateNum"],
+  setup(props, ctx: SetupContext<EmitsOptions>) {
+    const useCustom = useCustomers(props, ctx);
+    const _: any = inject("_");
+    return _.merge({}, useCommons(), useCustom);
   },
 });
-
-const useCustomers = () => {
-  const formss = ref(null);
-  const form: Ref<Customer> = ref({
-    name: "",
-    idCard: "",
-    tel: "",
-  });
-  const contactForm = ref({
-    name: "",
-    idCard: "",
-    tel: "",
-  });
-  const commonCustomerList: Ref<Array<Customer>> = ref([
-    { name: "lulu", idCard: "303030303003030303", tel: "1235555412" },
-  ]);
-  const customerList = ref(new Set<Customer>());
-
-  const addCustomerBtn = () => {
-    let target = Object.assign({}, form.value);
-    customerList.value.add(target);
-    form.value.name = form.value.idCard = form.value.tel = "";
-  };
-  const addToList = (index: number) => {
-    customerList.value.add(commonCustomerList.value[index]);
-  };
-  const deleteFromList = (index: Customer) => {
-    customerList.value.delete(index);
-  };
-  //TODO: 表单校验
-
-  //TODO: 下一步事件
-  const nextBtn = () => {};
-  return {
-    contactForm,
-    customerList,
-    commonCustomerList,
-    form,
-    formss,
-    addCustomerBtn,
-    addToList,
-    deleteFromList,
-    nextBtn,
-  };
+const useCommons = () => {
+  return {};
 };
 </script>
 

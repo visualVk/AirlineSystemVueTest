@@ -7,5 +7,4 @@ export class OrderBriefInfoImpl implements OrderBriefInfo {
   price!: string;
   num!: string;
   changeFee!: string;
-
 }

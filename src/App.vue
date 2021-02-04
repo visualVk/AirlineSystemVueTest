@@ -39,6 +39,8 @@ export default {
   },
   setup(props) {
     const notice = ref("warning!");
+    const _ = require("lodash");
+    provide("_", _);
     provide("notice", notice);
   },
 };

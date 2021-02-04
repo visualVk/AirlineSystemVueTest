@@ -4,7 +4,7 @@
       <el-col :span="3"></el-col>
       <el-col :span="12">
         <div class="passenge">
-          <OrderCustomer></OrderCustomer>
+          <OrderCustomer @updateNum="updateNum"></OrderCustomer>
         </div>
       </el-col>
       <el-col :span="1"></el-col>
@@ -18,7 +18,7 @@
             "
           >
             <OrderTicketBrief></OrderTicketBrief>
-            <OrderBriefInfo></OrderBriefInfo>
+            <OrderBriefInfo :orderList="orderObj"></OrderBriefInfo>
           </el-row>
         </el-affix>
       </el-col>
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, provide, reactive, ref } from "vue";
 import OrderTicketBrief from "@/components/Order/OrderTicketBrief/OrderTicketBrief.vue";
 import OrderCustomer from "@/components/Order/OrderCustomer/OrderCustomer.vue";
 import OrderBriefInfo from "@/components/Order/OrderBriefInfo/OrderBriefInfo.vue";
@@ -41,9 +41,26 @@ export default defineComponent({
   },
   setup() {
     //TODO: 需要添加订购的机票信息
-    return {};
+    const { orderObj, updateNum } = useCustom();
+
+    return { orderObj, updateNum };
   },
 });
+
+const useCustom = () => {
+  const orderObj = reactive([
+    {
+      price: "123",
+      num: "0",
+      changeFee: "12",
+    },
+  ]);
+
+  const updateNum = (num: Number) => {
+    orderObj[0].num = num.toString();
+  };
+  return { orderObj, updateNum };
+};
 </script>
 
 <style scoped>

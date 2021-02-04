@@ -16,7 +16,7 @@
             <span>个人主页首页</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="/order">
+        <el-menu-item index="/profileOrder">
           <i class="el-icon-menu"></i>
           <template #title>订单</template>
         </el-menu-item>

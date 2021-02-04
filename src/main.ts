@@ -12,7 +12,6 @@ import { ElCollapseTransition } from 'element-plus';
 
 const app = createApp(App)
 installElementPlus(app)
-
 app.config.globalProperties.$msgbox = MessageBox
 app.config.globalProperties.$alert = MessageBox.alert
 app.config.globalProperties.$confirm = MessageBox.confirm;

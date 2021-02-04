@@ -50,7 +50,7 @@ const useCommons = (props: any) => {
   const totPrice = computed(() => {
     let tot = 0.0;
     orderList.value.forEach((o) => {
-      tot += parseFloat(o.price);
+      tot += parseFloat(o.price) * parseInt(o.num);
     });
     return tot;
   });
