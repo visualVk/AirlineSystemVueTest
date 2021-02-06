@@ -125,11 +125,13 @@ export default defineComponent({
   setup(props, ctx: SetupContext<EmitsOptions>) {
     const useCustom = useCustomers(props, ctx);
     const _: any = inject("_");
-    return _.merge({}, useCommons(), useCustom);
+
+    return _.merge({}, toRefs(useCommons()), toRefs(useCustom));
   },
 });
 const useCommons = () => {
-  return {};
+  const testRef = ref(0);
+  return { testRef };
 };
 </script>
 

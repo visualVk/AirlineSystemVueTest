@@ -8,6 +8,7 @@ import OrderDisplayMain from '@/components/profile/Main/OrderDisplayMain/OrderDi
 import MsgDisplayMain from '@/components/profile/Main/MsgDisplayMain/MsgDisplayMain.vue'
 import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDetailMain.vue'
 import OrderMain from '@/components/Order/OrderMain.vue'
+import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -51,6 +52,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/orderDetail',
     name: 'OrderDetail',
     component: OrderDetailMain
+  },
+  {
+    path: '/orderConfirm',
+    name: 'OrderConfirm',
+    component: OrderConfirm
   }
 
 ]

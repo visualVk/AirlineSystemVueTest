@@ -5,8 +5,12 @@
         >让你的旅行更幸福</el-col
       >
       <el-col :span="8"
-        ><el-button type="text" icon="el-icon-bangzhu" size="small"
-          >更换语言</el-button
+        ><el-button
+          type="text"
+          icon="el-icon-bangzhu"
+          size="small"
+          @click="homeBtn"
+          >Home</el-button
         ></el-col
       >
       <el-col :span="8">
@@ -55,19 +59,38 @@
 </template>
 
 <script lang='ts'>
-import { ref } from "vue";
+import { inject, ref, toRef, toRefs } from "vue";
 import "@/utils/store/store.ts";
 import { stores } from "@/utils/store/store.ts";
 import { Router, useRouter } from "vue-router";
 export default {
   setup() {
     const router = useRouter();
-    const { isLogin } = useCommons();
-    const { loginBtn, profileBtn } = useLoginAndProfile(router);
-    const { orderBtn } = useOrder(router);
-    const { msgBtn } = useMsg(router);
-    return { isLogin, loginBtn, profileBtn, orderBtn, msgBtn };
+    const _: any = inject("_");
+    return _.merge(
+      toRefs(useCommons()),
+      toRefs(useLoginAndProfile(router)),
+      toRefs(useLoginAndProfile(router)),
+      toRefs(useOrder(router)),
+      toRefs(useMsg(router)),
+      toRefs(useHome(router)),
+      toRefs(useCoupon(router))
+    );
   },
+};
+
+const useHome = (router: Router) => {
+  const homeBtn = () => {
+    router.push({ path: "/" });
+  };
+  return { homeBtn };
+};
+
+const useCoupon = (router: Router) => {
+  const couponBtn = () => {
+    router.push({ name: "ProfileMsg" });
+  };
+  return { couponBtn };
 };
 
 const useOrder = (router: Router) => {

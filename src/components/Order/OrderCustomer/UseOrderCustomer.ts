@@ -1,3 +1,4 @@
+import router from "@/router";
 import { stores } from "@/utils/store/store";
 import MessageBox from "element-plus/lib/el-message-box";
 import { EmitsOptions, getCurrentInstance, reactive, Ref, ref, SetupContext, watch } from "vue";
@@ -93,7 +94,9 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
   }); //返回乘客人数的变化
 
   //TODO: 下一步事件
-  const nextBtn = () => { };
+  const nextBtn = () => {
+    router.push({ path: '/orderConfirm' })
+  };
   return {
     contactRules,
     formRules,

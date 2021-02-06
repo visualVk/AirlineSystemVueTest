@@ -4,7 +4,9 @@
       <el-col :span="4"> 订单号：<span style="color: blue">{{}}</span> </el-col>
       <el-col :span="4">预定日期：<span>{{}}</span></el-col>
       <el-col :span="4">
-        <el-button type="text" style="font-size: 16px">取消订单</el-button>
+        <el-button type="text" style="font-size: 16px" v-if="isShowCancel">
+          取消订单
+        </el-button>
       </el-col>
       <el-col :span="12"></el-col>
     </el-row>
@@ -34,7 +36,11 @@
     <el-row class="btn_row">
       <el-col :span="18"></el-col>
       <el-col :span="6" style="text-align: right">
-        <el-button style="margin-right: 5px" @click="orderDetailBtn">
+        <el-button
+          style="margin-right: 5px"
+          @click="orderDetailBtn"
+          v-if="isShowDetail"
+        >
           查看详情
         </el-button>
       </el-col>
@@ -47,6 +53,16 @@ import { defineComponent } from "vue";
 import { Router, useRouter } from "vue-router";
 
 export default defineComponent({
+  props: {
+    isShowDetail: {
+      type: Boolean,
+      default: true,
+    },
+    isShowCancel: {
+      type: Boolean,
+      default: true,
+    },
+  },
   setup() {
     const router = useRouter();
     const { orderDetailBtn } = useOrder(router);
