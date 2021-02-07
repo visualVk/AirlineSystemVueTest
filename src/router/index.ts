@@ -7,6 +7,7 @@ import ProfileDisplayMain from "@/components/profile/Main/ProfileDisplayMain/Pro
 import OrderDisplayMain from '@/components/profile/Main/OrderDisplayMain/OrderDisplayMain.vue'
 import MsgDisplayMain from '@/components/profile/Main/MsgDisplayMain/MsgDisplayMain.vue'
 import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDetailMain.vue'
+import CouponDisplayMain from '@/components/profile/Main/CouponDisplayMain/CouponDisplaMain.vue'
 import OrderMain from '@/components/Order/OrderMain.vue'
 import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
 
@@ -45,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/msg',
         name: 'ProfileMsg',
         component: MsgDisplayMain
+      },
+      {
+        path: '/coupon',
+        name: 'ProfileCoupon',
+        component: CouponDisplayMain
       }
     ]
   },

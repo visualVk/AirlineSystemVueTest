@@ -27,8 +27,9 @@
     >
       <!-- TODO: 之后需要借助数据进行遍历生成 -->
       <MsgListItem
-        v-for="(i, index) in 4"
-        :key="i"
+        v-for="(i, index) in couponList"
+        :key="i.title"
+        :msgObj="i"
         @operateBtn="operateBtn(index)"
       ></MsgListItem>
     </el-checkbox-group>
@@ -42,7 +43,7 @@
           v-model:currentPage="currentPage1"
           :page-size="10"
           layout="total, prev, pager, next"
-          :total="100"
+          :total="totolSize"
         >
         </el-pagination>
       </el-col>
@@ -52,10 +53,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, toRef, toRefs } from "vue";
+import { defineComponent, inject, toRefs } from "vue";
 import MsgSearchBar from "@/components/profile/Main/MsgDisplayMain/MsgSearchBar/MsgSearchBar.vue";
 import MsgListItem from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem.vue";
 import { stores } from "@/utils/store/store";
+import dayjs from "dayjs";
 
 export default defineComponent({
   components: {
@@ -69,7 +71,21 @@ export default defineComponent({
       checkAll: false,
       cities: ["上海", "北京", "广州", "深圳"],
       checkedCities: ["上海", "北京"],
+      couponList: [
+        //显示模型
+        {
+          title: "上海",
+          msgDetail: "",
+          date: dayjs(new Date()).format("YYYY-MM-DD"),
+          operator: "立刻使用",
+        },
+      ],
     };
+  },
+  computed: {
+    totolSize() {
+      this.$data.couponList.length;
+    },
   },
   methods: {
     handleCheckAllChange(val: any) {
@@ -92,7 +108,6 @@ export default defineComponent({
     return _.merge(toRefs(useMsg()));
   },
 });
-
 const useMsg = () => {
   const operateBtn = (index: number) => {
     stores.isDebug ? console.log("operateBtn's Index:", index) : "";

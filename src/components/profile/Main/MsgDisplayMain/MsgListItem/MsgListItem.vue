@@ -15,7 +15,9 @@
     </el-col>
     <el-col :span="4" class="msg_title_font">{{ msgObj.date }}</el-col>
     <el-col :span="4" class="msg_title_font">
-      <el-link type="primary">{{ msgObj.operator }}</el-link>
+      <el-link type="primary" href="javascript:void(0);" @click="operatorBtn">
+        {{ msgObj.operator }}
+      </el-link>
     </el-col>
   </el-row>
   <el-row style="min-height: 100px" v-show="isShowTitle">
@@ -27,10 +29,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, inject, ref, SetupContext, toRef, toRefs } from "vue";
 import dayjs from "dayjs";
 import { MsgListItem } from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem.ts";
+import { EmitsOptions } from "@vue/test-utils/dist/mount";
 export default defineComponent({
+  emits: ["operateBtn"],
   props: {
     msgObj: {
       type: MsgListItem,
@@ -43,19 +47,24 @@ export default defineComponent({
       },
     },
   },
-  setup() {
-    const { isShowTitle, showTitleBtn } = useTitle();
-    return { isShowTitle, showTitleBtn };
+  setup(props, ctx: SetupContext<EmitsOptions>) {
+    // const { isShowTitle, showTitleBtn } = useTitle(ctx);
+    const _: any = inject("_");
+
+    return _.merge({}, toRefs(useTitle(ctx)));
   },
 });
 
-const useTitle = () => {
+const useTitle = (ctx: SetupContext<EmitsOptions>) => {
   const isShowTitle = ref(false);
   const showTitleBtn = () => {
     isShowTitle.value = !isShowTitle.value;
     return false;
   };
-  return { isShowTitle, showTitleBtn };
+  const operatorBtn = () => {
+    ctx.emit("operateBtn");
+  };
+  return { isShowTitle, showTitleBtn, operatorBtn };
 };
 </script>
 

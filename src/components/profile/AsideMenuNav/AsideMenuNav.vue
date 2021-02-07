@@ -28,7 +28,7 @@
           <i class="el-icon-document"></i>
           <template #title>优惠券</template>
         </el-menu-item>
-        <el-submenu index="4">
+        <!-- <el-submenu index="4">
           <template #title>
             <i class="el-icon-wallet"></i>
             <span>钱包</span>
@@ -36,7 +36,7 @@
           <el-menu-item-group>
             <el-menu-item index="1-2">安全设置</el-menu-item>
           </el-menu-item-group>
-        </el-submenu>
+        </el-submenu> -->
         <el-menu-item index="/">
           <template #title>
             <i class="el-icon-location"></i>
