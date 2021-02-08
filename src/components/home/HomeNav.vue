@@ -74,9 +74,17 @@ export default {
       toRefs(useOrder(router)),
       toRefs(useMsg(router)),
       toRefs(useHome(router)),
-      toRefs(useCoupon(router))
+      toRefs(useCoupon(router)),
+      toRefs(useService(router))
     );
   },
+};
+
+const useService = (router: Router) => {
+  const serviceBtn = () => {
+    router.push({ path: "/serviceClient" });
+  };
+  return { serviceBtn };
 };
 
 const useHome = (router: Router) => {

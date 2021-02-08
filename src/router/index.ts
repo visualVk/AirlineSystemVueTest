@@ -10,7 +10,7 @@ import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDeta
 import CouponDisplayMain from '@/components/profile/Main/CouponDisplayMain/CouponDisplaMain.vue'
 import OrderMain from '@/components/Order/OrderMain.vue'
 import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
-
+import ServiceClientElMain from "@/views/serviceClient/ServiceClientElMain.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -63,6 +63,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/orderConfirm',
     name: 'OrderConfirm',
     component: OrderConfirm
+  },
+  {
+    path: '/serviceClient',
+    name: 'ServiceClient',
+    component: ServiceClientElMain
   }
 
 ]
