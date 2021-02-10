@@ -37,6 +37,10 @@
             <el-menu-item index="1-2">安全设置</el-menu-item>
           </el-menu-item-group>
         </el-submenu> -->
+        <el-menu-item index="/question">
+          <i class="el-icon-question"></i>
+          <template #title>我的提问</template>
+        </el-menu-item>
         <el-menu-item index="/">
           <template #title>
             <i class="el-icon-location"></i>

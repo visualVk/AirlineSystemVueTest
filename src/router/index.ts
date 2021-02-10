@@ -8,6 +8,8 @@ import OrderDisplayMain from '@/components/profile/Main/OrderDisplayMain/OrderDi
 import MsgDisplayMain from '@/components/profile/Main/MsgDisplayMain/MsgDisplayMain.vue'
 import OrderDetailMain from '@/components/profile/Main/OrderDetailMain/OrderDetailMain.vue'
 import CouponDisplayMain from '@/components/profile/Main/CouponDisplayMain/CouponDisplaMain.vue'
+import QuestionDisplayMain from '@/components/profile/Main/QuestionDisplayMain/QuestionDisplayMain.vue'
+import QuestionDetail from '@/components/profile/Main/QuestionDisplayMain/QuestionDetail/QuestionDetail.vue'
 import OrderMain from '@/components/Order/OrderMain.vue'
 import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
 import ServiceClientElMain from "@/views/serviceClient/ServiceClientElMain.vue"
@@ -51,6 +53,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/coupon',
         name: 'ProfileCoupon',
         component: CouponDisplayMain
+      },
+      {
+        path: '/question',
+        name: 'ProfileQuestion',
+        component: QuestionDisplayMain
+      },
+      {
+        path: '/questionDetail',
+        name: 'ProfileQuestionDetail',
+        component: QuestionDetail
       }
     ]
   },

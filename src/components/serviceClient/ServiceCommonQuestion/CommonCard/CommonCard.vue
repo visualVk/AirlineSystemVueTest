@@ -41,8 +41,10 @@ export default defineComponent({
 <style scoped>
 .container {
   text-align: center;
+  cursor: pointer;
 }
 a {
+  text-decoration: none;
   line-height: 1.8;
   color: #666;
   /* overflow: hidden; */
@@ -50,9 +52,6 @@ a {
   text-overflow: ellipsis;
   font: 18px/1.5 "PingFangSC-Regular", "Microsoft yahei", Arial, Simsun,
     sans-serif;
-}
-a:hover {
-  color: #06c;
 }
 .round_img {
   border-radius: 50%;
