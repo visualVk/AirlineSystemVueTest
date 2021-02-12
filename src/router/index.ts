@@ -13,74 +13,90 @@ import QuestionDetail from '@/components/profile/Main/QuestionDisplayMain/Questi
 import OrderMain from '@/components/Order/OrderMain.vue'
 import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
 import ServiceClientElMain from "@/views/serviceClient/ServiceClientElMain.vue"
+import Main from '@/views/main/Main.vue'
+import LoginElMain from "@/views/login/LoginElMain.vue"
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: HomeElMain
-  },
-  {
-    path: '/queryAirline',
-    name: 'QueryAirline',
-    component: SearchElMain
-  },
-  {
-    path: '/order',
-    name: 'order',
-    component: OrderMain
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: ProfileElMain,
+    name: 'Main',
+    redirect: '/home',
+    component: Main,
     children: [
       {
-        path: '/me',
-        name: 'ProfileMe',
-        component: ProfileDisplayMain
+        path: '/home',
+        name: 'Home',
+        component: HomeElMain
+      }, {
+        path: '/queryAirline',
+        name: 'QueryAirline',
+        component: SearchElMain
       },
       {
-        path: '/profileOrder',
-        name: 'ProfileOrder',
-        component: OrderDisplayMain
+        path: '/order',
+        name: 'order',
+        component: OrderMain
       },
       {
-        path: '/msg',
-        name: 'ProfileMsg',
-        component: MsgDisplayMain
+        path: '/profile',
+        name: 'Profile',
+        component: ProfileElMain,
+        children: [
+          {
+            path: '/me',
+            name: 'ProfileMe',
+            component: ProfileDisplayMain
+          },
+          {
+            path: '/profileOrder',
+            name: 'ProfileOrder',
+            component: OrderDisplayMain
+          },
+          {
+            path: '/msg',
+            name: 'ProfileMsg',
+            component: MsgDisplayMain
+          },
+          {
+            path: '/coupon',
+            name: 'ProfileCoupon',
+            component: CouponDisplayMain
+          },
+          {
+            path: '/question',
+            name: 'ProfileQuestion',
+            component: QuestionDisplayMain
+          },
+          {
+            path: '/questionDetail',
+            name: 'ProfileQuestionDetail',
+            component: QuestionDetail
+          }
+        ]
       },
       {
-        path: '/coupon',
-        name: 'ProfileCoupon',
-        component: CouponDisplayMain
+        path: '/orderDetail',
+        name: 'OrderDetail',
+        component: OrderDetailMain
       },
       {
-        path: '/question',
-        name: 'ProfileQuestion',
-        component: QuestionDisplayMain
+        path: '/orderConfirm',
+        name: 'OrderConfirm',
+        component: OrderConfirm
       },
       {
-        path: '/questionDetail',
-        name: 'ProfileQuestionDetail',
-        component: QuestionDetail
+        path: '/serviceClient',
+        name: 'ServiceClient',
+        component: ServiceClientElMain
       }
     ]
   },
   {
-    path: '/orderDetail',
-    name: 'OrderDetail',
-    component: OrderDetailMain
+    path: '/login',
+    name: 'Login',
+    component: LoginElMain
   },
-  {
-    path: '/orderConfirm',
-    name: 'OrderConfirm',
-    component: OrderConfirm
-  },
-  {
-    path: '/serviceClient',
-    name: 'ServiceClient',
-    component: ServiceClientElMain
-  }
+
 
 ]
 

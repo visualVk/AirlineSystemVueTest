@@ -1,5 +1,5 @@
 export let stores = {
-  isLogin: true,
+  isLogin: false,
   isDebug: true,
   jwt: '',
   setIsLogin(value: boolean) {

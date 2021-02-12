@@ -96,7 +96,7 @@ const useHome = (router: Router) => {
 
 const useCoupon = (router: Router) => {
   const couponBtn = () => {
-    router.push({ name: "ProfileMsg" });
+    router.push({ name: "ProfileCoupon" });
   };
   return { couponBtn };
 };
@@ -116,7 +116,9 @@ const useMsg = (router: Router) => {
 };
 
 const useLoginAndProfile = (router: Router) => {
-  const loginBtn = () => {};
+  const loginBtn = () => {
+    router.push({ name: "Login" });
+  };
   const profileBtn = () => {
     // router.push();
     //=>/profile/me==1
