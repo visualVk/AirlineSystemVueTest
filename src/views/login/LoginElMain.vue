@@ -119,6 +119,7 @@
 import { defineComponent, inject, toRefs } from "vue";
 import { useLogin } from "@/views/login/UseLogin.ts";
 import { useRegister } from "@/views/login/UseRegister.ts";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   data() {
@@ -133,7 +134,8 @@ export default defineComponent({
   },
   setup() {
     const _: any = inject("_");
-    return _.merge({}, toRefs(useLogin()), toRefs(useRegister()));
+    const router = useRouter()
+    return _.merge({}, toRefs(useLogin(router)), toRefs(useRegister(router)));
   },
 });
 </script>

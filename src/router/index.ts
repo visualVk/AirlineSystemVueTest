@@ -15,6 +15,9 @@ import OrderConfirm from "@/components/Order/OrderConfirm/OrderConfirm.vue"
 import ServiceClientElMain from "@/views/serviceClient/ServiceClientElMain.vue"
 import Main from '@/views/main/Main.vue'
 import LoginElMain from "@/views/login/LoginElMain.vue"
+import element from '@/plugins/element'
+import { nextTick } from 'vue'
+import { stores } from '@/utils/store/store'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -104,5 +107,28 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+/**
+ * @description: 路由守护，验证是否需要登录
+ * @param {*} to
+ * @param {*} from
+ * @param {*} next
+ * @return {*}
+ */
+router.beforeEach((to, from, next) => {
+  if (!isInBlank(to.name)) {
+    if (stores.isLogin) {
+      next()
+    } else {
+      next({ name: 'Login' })
+    }
+  } else {
+    next()
+  }
+})
 
+// const nameList = ['QueryAirline', 'order', 'Profile', 'ProfileMe', 'ProfileOrder', 'ProfileMsg', 'ProfileCoupon', 'ProfileQuestion', 'ProfileQuestionDetail', 'OrderConfirm', 'OrderDetail']
+const blankList = ['Login', 'Main', 'Home', 'ServiceClient']
+function isInBlank(name: string | symbol | null | undefined) {
+  return blankList.find(e => e == name);
+}
 export default router

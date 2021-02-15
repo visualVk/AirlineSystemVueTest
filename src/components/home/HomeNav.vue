@@ -16,9 +16,27 @@
       <el-col :span="8">
         <el-row>
           <el-space alignment="start" size="20" spacer="|" id="buttog-group">
-            <el-button type="text" v-if="isLogin" @click="profileBtn"
+            <!-- <el-button type="text" v-if="isLogin" @click="profileBtn"
               >尊敬的客户</el-button
+            > -->
+            <el-dropdown
+              @command="handleCommand"
+              v-if="isLogin"
+              style="width: 150px"
             >
+              <span class="el-dropdown-link">
+                尊敬的客户，您好<i
+                  class="el-icon-arrow-down el-icon--right"
+                ></i>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="signout"
+                    >退出登录</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
             <el-button type="text" v-else @click="loginBtn"
               >登录/注册</el-button
             >
@@ -64,6 +82,7 @@ import "@/utils/store/store.ts";
 import { stores } from "@/utils/store/store.ts";
 import { Router, useRouter } from "vue-router";
 export default {
+  methods: {},
   setup() {
     const router = useRouter();
     const _: any = inject("_");
@@ -135,8 +154,17 @@ const useLoginAndProfile = (router: Router) => {
  */
 const useCommons = () => {
   const isLogin = ref(stores.isLogin);
+
+  const handleCommand = (command: String) => {
+    stores.isDebug ? console.log("command value:", command) : "";
+    if (command == "signout") {
+      stores.isLogin = false;
+      isLogin.value = stores.isLogin;
+    }
+  };
   return {
     isLogin,
+    handleCommand,
   };
 };
 </script>

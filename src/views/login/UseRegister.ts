@@ -1,7 +1,16 @@
+/*
+ * @Author: your name
+ * @Date: 2021-02-12 13:52:29
+ * @LastEditTime: 2021-02-13 11:12:06
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\views\login\UseRegister.ts
+ */
 import { stores } from "@/utils/store/store"
 import { EmitsOptions } from "@vue/test-utils/dist/mount"
 import { ElForm } from "element-plus"
 import { reactive, Ref, ref, SetupContext } from "vue"
+import { Router } from "vue-router"
 
 interface RegisterUser {
   username: String,
@@ -9,7 +18,7 @@ interface RegisterUser {
   repassword: String
 }
 
-export const useRegister = () => {
+export const useRegister = (router: Router) => {
   const registerForm = ref()
   const registerUser = reactive<RegisterUser>({
     username: "",

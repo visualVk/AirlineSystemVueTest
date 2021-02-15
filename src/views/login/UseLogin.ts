@@ -1,14 +1,23 @@
+/*
+ * @Author: your name
+ * @Date: 2021-02-12 12:42:13
+ * @LastEditTime: 2021-02-13 11:14:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\views\login\UseLogin.ts
+ */
 import { stores } from "@/utils/store/store"
 import { EmitsOptions } from "@vue/test-utils/dist/mount"
 import { ElForm } from "element-plus"
 import { reactive, Ref, ref, SetupContext } from "vue"
+import { Router } from "vue-router"
 
 interface LoginUser {
   username: String,
   password: String
 }
 
-export const useLogin = () => {
+export const useLogin = (router: Router) => {
   const loginForm = ref()
   const loginUser = reactive<LoginUser>({
     username: "",
@@ -38,6 +47,8 @@ export const useLogin = () => {
       if (valid) {
         //TODO: 登录请求
         stores.isDebug ? console.log('login form value:', valid) : '';
+        stores.isLogin = true
+        router.push({ path: '/' })
       }
     });
   }

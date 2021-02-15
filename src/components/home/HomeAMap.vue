@@ -5,45 +5,37 @@
       <el-col :span="4">
         <el-row>
           <el-col :span="23">
-            <el-select
+            <el-input
+              placeholder="请输入内容"
               v-model="placeObj.departure"
-              filterable
-              placeholder="请选择出发地"
               style="width: 100%"
+              id="depart_input"
             >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+              <template #prepend>出发地:</template>
+            </el-input>
           </el-col>
           <el-col :span="1"></el-col>
         </el-row>
         <el-row>
           <el-col :span="23">
-            <el-select
+            <el-input
+              placeholder="请输入内容"
               v-model="placeObj.destination"
-              filterable
-              placeholder="请选择目的地"
               style="width: 100%"
+              id="destination_input"
             >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+              <template #prepend>目的地:</template>
+            </el-input>
           </el-col>
           <el-col :span="1"></el-col>
         </el-row>
         <el-row>
           <el-col :span="23">
-            <el-button style="width: 100%" type="primary" icon="el-icon-search"
+            <el-button
+              style="width: 100%"
+              type="primary"
+              icon="el-icon-search"
+              @click="findWay"
               >搜索</el-button
             >
           </el-col>
@@ -67,23 +59,31 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="16"><div id="container"></div></el-col>
+      <el-col :span="16">
+        <el-row style="height: 100%; overflow: hidden">
+          <div id="container"></div>
+          <div id="panel"></div>
+        </el-row>
+      </el-col>
       <el-col :span="2"></el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { inject, reactive } from "vue";
+import { inject, onMounted, reactive } from "vue";
 import { AlreadyOrderItem } from "../HomeClass";
 import { HomeServiceApi } from "@/utils/api/HomeServiceApi";
+import { stores } from "@/utils/store/store";
+import { createMap, findWay } from "@/components/home/AMaSp.ts";
 export default {
   setup() {
     const placeObj = reactive({
       departure: "",
       destination: "",
     });
-    return { placeObj };
+    onMounted(createMap);
+    return { placeObj, findWay };
   },
   data() {
     return {
@@ -117,13 +117,6 @@ export default {
     };
   },
   methods: {
-    initMap: function () {
-      let map = new AMap.Map("container", {
-        zoom: 18, //级别
-        center: [116.397428, 39.90923], //中心点坐标
-        viewMode: "3D", //使用3D视图
-      });
-    },
     loadCity: async function () {
       let res = await HomeServiceApi.fingAllCity();
       if (res.statusCode == 200) {
@@ -137,7 +130,6 @@ export default {
     submitSearch: function () {},
   },
   mounted() {
-    this.initMap();
     this.loadCity();
   },
 };
@@ -145,7 +137,7 @@ export default {
 
 <style lang="scss" scoped>
 #container {
-  width: 100%;
+  width: 70%;
   height: 500px;
 }
 .el-row {
@@ -179,5 +171,25 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+
+#panel {
+  // position: ab;
+  background-color: white;
+  height: 100%;
+  overflow-y: auto;
+  // top: 10px;
+  // right: 10px;
+  width: 30%;
+}
+#panel .amap-call {
+  background-color: #009cf9;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+#panel .amap-lib-driving {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: hidden;
 }
 </style>
