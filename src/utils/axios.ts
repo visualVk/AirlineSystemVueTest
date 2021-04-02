@@ -1,6 +1,7 @@
 import router from "@/router"
-import Axios, { AxiosError, AxiosResponse } from "axios"
+import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { getCurrentInstance } from "vue"
+import { stores } from "@/utils/store/store"
 // import message from "element-plus/lib/el-message/src/message"
 
 /**
@@ -60,6 +61,7 @@ const getErrorCode2text = (response: AxiosResponse): string => {
  */
 const service = Axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
+  // baseURL: 'http://localhost:32001',
   timeout: 10000,
   headers: {
     'User-Type': 'bus'
@@ -80,40 +82,25 @@ const service = Axios.create({
 //   }
 // })
 
-// /**
-//  * @description 请求发起前的拦截器
-//  * @returns {AxiosRequestConfig} config
-//  */
-// service.interceptors.request.use(async (config: AxiosRequestConfig) => {
-//   // 如果是获取token接口：
-//   if (config.url === '/auth/oauth/token') {
-//     let userAccount = ''
-//     // 若存在username，则为登录情况，判断user-account
-//     if (config.params.username) {
-//       userAccount = config.params.username.includes('-')
-//         ? 'ACCOUNT_USER'
-//         : 'ADMIN_USER'
-//     } else {
-//       // 刷新token情况，通过用户信息email是否有值判断
-//       userAccount = Store.state.user.userDetail.email
-//         ? 'ADMIN_USER'
-//         : 'ACCOUNT_USER'
-//     }
+/**
+ * @description 请求发起前的拦截器
+ * @returns {AxiosRequestConfig} config
+ */
+service.interceptors.request.use(async (config: AxiosRequestConfig) => {
+  // 如果是获取token接口：
+  if (config.url === '/api/user/auth/login') {
+  } else {
+    // 如果保存有token，则取，否则不添加Authorization
+    if (stores.token != null && stores.token != '') {
+      let token = stores.token
+      let tokenType = stores.tokenType
+      config.headers['Authorization'] = `${tokenType} ${token}`
+    }
+  }
+  // console.log(config);
 
-//     config.headers['User-Account'] = userAccount
-//     config.headers.Authorization = 'Basic ZmViczoxMjM0NTY='
-//   } else {
-//     // 如果保存有token，则取，否则不添加Authorization
-//     if (localStorage.vuex && JSON.parse(localStorage.vuex).user?.token) {
-//       const token = Store.state.user?.token
-//       const tokenType = token.token_type
-//       const accessToken = token.access_token
-//       config.headers.Authorization = `${tokenType} ${accessToken}`
-//     }
-//   }
-
-//   return config
-// })
+  return config
+})
 
 
 /**

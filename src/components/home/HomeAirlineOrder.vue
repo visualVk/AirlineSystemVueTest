@@ -76,8 +76,8 @@ export default defineComponent({
     orderSearchObj: {
       type: AlreadyOrderItem,
       default: {
-        departure: "",
-        destination: "",
+        departure: { cityFirstAlp: "", cityId: "", cityName: "" },
+        destination: { cityFirstAlp: "", cityId: "", cityName: "" },
         date: new Date(),
       },
     },
@@ -113,14 +113,14 @@ export default defineComponent({
 //cascader part
 const cascaderUse = () => {
   const values = reactive({
-    cityList: [{ code: "a", cityList: [{ cityId: "", cityName: "" }] }],
+    cityList: [{ cityFirstAlp: "A", cityList: [{ cityName: "", cityId: "" }] }],
     visitedCityList: [{ cityId: "", cityName: "" }],
   });
   const options = computed(() => {
     let cityMap: OptionInterface[] = values.cityList.map((cityList) => {
       return {
-        label: cityList.code,
-        value: cityList.code,
+        label: cityList.cityFirstAlp,
+        value: cityList.cityFirstAlp,
         children: cityList.cityList.map((city) => {
           return {
             label: city.cityName,
@@ -129,34 +129,15 @@ const cascaderUse = () => {
         }),
       };
     });
-
-    let visitedMap: OptionInterface[] = [
-      {
-        label: "曾去地",
-        value: "曾去地",
-        children: values.visitedCityList.map((city) => {
-          return {
-            label: city.cityName,
-            value: city.cityId,
-          };
-        }),
-      },
-    ];
-
-    return visitedMap.concat(cityMap);
+    //TODO: 需要修改城市列表
+    return cityMap;
   });
   const valuesRefs = toRefs(values);
   onMounted(async () => {
-    let [allCityResult, allVistedCityResult] = await Promise.all([
-      HomeServiceApi.fingAllCity(),
-      HomeServiceApi.findAllVisitedCity(),
-    ]);
-    if (
-      allCityResult.statusCode == 200 &&
-      allVistedCityResult.statusCode == 200
-    ) {
+    let [allCityResult] = await Promise.all([HomeServiceApi.fingAllCity()]);
+    if (allCityResult.code == 0) {
       values.cityList = allCityResult.data;
-      values.visitedCityList = allVistedCityResult.data;
+      // values.visitedCityList = allVistedCityResult.data;
     }
   });
   return {

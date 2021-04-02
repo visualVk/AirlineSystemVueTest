@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-15 11:14:25
- * @LastEditTime: 2021-02-15 12:10:48
+ * @LastEditTime: 2021-03-05 18:57:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\home\AMaSp.ts
@@ -19,7 +19,7 @@ const points = {
   startPoint: [],
   endPoint: []
 }
-let map: any;
+let map;
 export const needValueOfMap = () => {
   const twoPoint = reactive({
     startPoint: [],
@@ -113,7 +113,7 @@ export const findWay = () => {
       map: map,
       panel: 'panel'
     });
-    driving.search(points.startPoint, points.endPoint, function (status: any, result: any) {
+    driving.search(points.startPoint, points.endPoint, function (status, result) {
       // 未出错时，result即是对应的路线规划方案
       //TODO: 后续需要在这添加规划路径线
       stores.isDebug ? console.log('way:', result) : ''

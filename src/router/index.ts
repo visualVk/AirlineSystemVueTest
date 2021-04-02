@@ -115,6 +115,7 @@ const router = createRouter({
  * @return {*}
  */
 router.beforeEach((to, from, next) => {
+  stores.isDebug ? console.log(to.params, from.params) : '';
   if (!isInBlank(to.name)) {
     if (stores.isLogin) {
       next()

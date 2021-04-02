@@ -34,7 +34,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/components/home/AMaSp.js", "src/utils/date/DateFormatUtil.ts"  ],
   "exclude": [
     "node_modules"
   ]

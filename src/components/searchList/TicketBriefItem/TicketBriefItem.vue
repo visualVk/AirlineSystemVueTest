@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-30 14:34:23
+ * @LastEditTime: 2021-04-02 11:05:59
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\searchList\TicketBriefItem\TicketBriefItem.vue
+-->
 <template>
   <el-row style="height: 58px; line-height: 58px">
     <el-col :span="8"></el-col>
@@ -27,10 +35,10 @@
     </el-col>
     <el-col :span="8">
       <el-row>
-        <el-col :span="15"> 类型{{}} </el-col>
+        <el-col :span="15"> {{ seatBO.seatTypeName }} </el-col>
         <el-col :span="4" style="color: #ff7d13">
           <span style="font-size: 12px">￥</span>
-          <span style="font-size: 20px">价格{{}}</span>
+          <span style="font-size: 20px">{{ seatBO.price }}</span>
         </el-col>
         <el-col :span="4">
           <el-button
@@ -54,6 +62,17 @@ import { defineComponent } from "vue";
 import { Router, useRouter } from "vue-router";
 
 export default defineComponent({
+  props: {
+    seatBO: {
+      default: {
+        price: 90,
+        remain: 5,
+        seatTypeId: "ST1",
+        seatTypeName: "经济舱",
+        tot: 0,
+      },
+    },
+  },
   setup() {
     const router = useRouter();
     const { orderBtn } = useCommons(router);

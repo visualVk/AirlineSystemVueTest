@@ -3,31 +3,37 @@
     <el-row style="height: 80px">
       <!-- 图标区 -->
       <el-col :span="4" style="text-align: right; line-height: 80px">
-        <el-image style="width: 75px; height: 75px" :src="url" fit="fill">
+        <el-image
+          style="width: 75px; height: 75px"
+          :src="airlineInfoObj.companyImg"
+          fit="fill"
+        >
         </el-image>
       </el-col>
       <!-- 公司 -->
       <el-col :span="6" style="line-height: 40px; text-align: center">
         <div>
-          <span class="company">公司{{}}</span>
+          <span class="company">{{ airlineInfoObj.companyName }}</span>
         </div>
         <div>
-          <span class="airlineTitle">航班名{{}}</span>
+          <span class="airlineTitle">{{ airlineInfoObj.airlineName }}</span>
         </div>
       </el-col>
       <!-- 地点和时间 -->
       <el-col :span="6" style="line-height: 40px">
         <el-row>
           <el-col :span="8" style="text-align: center">
-            <div><span>出发地{{}}</span></div>
-            <div>时间{{}}</div>
+            <div>
+              <span>{{ airlineInfoObj.departureCity.cityName }}</span>
+            </div>
+            <div>{{ airlineInfoObj.startTime }}</div>
           </el-col>
           <el-col :span="8" style="line-height: 80px; text-align: center">
             <i class="el-icon-right"></i>
           </el-col>
           <el-col :span="8" style="text-align: center">
-            <div>目的地{{}}</div>
-            <div>时间{{}}</div>
+            <div>{{ airlineInfoObj.destinationCity.cityName }}</div>
+            <div>{{ airlineInfoObj.endTime }}</div>
           </el-col>
         </el-row>
       </el-col>
@@ -49,8 +55,9 @@
     <el-row v-show="isShow" style="background: #f8fafb">
       <!-- TODO: 未来需要通过数据for循环创建 -->
       <TicketBrieftItem
-        v-for="i in 1"
-        :key="i"
+        v-for="seatBO in airlineInfoObj.seatBOList"
+        :key="seatBO.seatTypeId"
+        :seatBO="seatBO"
         style="border-bottom: 1px solid #e4e7ed"
       ></TicketBrieftItem>
     </el-row>
@@ -61,6 +68,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import TicketBrieftItem from "@/components/searchList/TicketBriefItem/TicketBriefItem.vue";
+import { dateFormat } from "@/utils/date/DateFormatUtil";
 export default defineComponent({
   components: {
     TicketBrieftItem,
@@ -69,8 +77,41 @@ export default defineComponent({
     imgUrl: String,
     airlineInfoObj: {
       default: {
-        company: "str",
-        airlineName: "str",
+        airlineDate: dateFormat("YYYY-mm-dd HH:MM:SS", new Date()),
+        airlineId: "A1",
+        airlineName: "长-105",
+        airlineSeatId: "AS1",
+        hours: 2.5,
+        endTime: "9:00:00",
+        startTime: "10:00:00",
+        companyId: "AC1",
+        companyName: "长虹",
+        companyImg: "",
+        departureCity: {
+          cityFirstAlp: "W",
+          cityId: "C1",
+          cityName: "温州",
+        },
+        destinationCity: {
+          cityFirstAlp: "W",
+          cityId: "C1",
+          cityName: "温州",
+        },
+        seatBOList: [
+          {
+            price: 90,
+            remain: 5,
+            seatTypeId: "ST1",
+            seatTypeName: "经济舱",
+            tot: 0,
+          },
+        ],
+        supEntityBOList: [
+          {
+            ticketTypeId: "TT1",
+            ticketTypeName: "成人",
+          },
+        ],
       },
     },
   },

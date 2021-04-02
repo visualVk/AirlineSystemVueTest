@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-06 11:31:06
- * @LastEditTime: 2021-02-13 12:14:18
+ * @LastEditTime: 2021-04-02 14:20:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\main.ts
@@ -13,7 +13,8 @@ import router from './router'
 // import Message from 'element-plus/lib/el-message'
 import installElementPlus from '../src/plugins/element'
 import '@/static/airline-theme.css'
-
+// import ElementPlus from 'element-plus';
+// import 'element-plus/lib/theme-chalk/index.css';
 const app = createApp(App)
 installElementPlus(app)
 // app.config.globalProperties.$msgbox = MessageBox

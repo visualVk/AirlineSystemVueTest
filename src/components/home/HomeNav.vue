@@ -31,9 +31,7 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="signout"
-                    >退出登录</el-dropdown-item
-                  >
+                  <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -81,6 +79,7 @@ import { inject, ref, toRef, toRefs } from "vue";
 import "@/utils/store/store.ts";
 import { stores } from "@/utils/store/store.ts";
 import { Router, useRouter } from "vue-router";
+import { UserService } from "@/utils/api";
 export default {
   methods: {},
   setup() {
@@ -143,9 +142,18 @@ const useLoginAndProfile = (router: Router) => {
     //=>/profile/me==1
     router.push({ name: "ProfileMe" });
   };
+  const logout = async () => {
+    let res = await UserService.logout();
+    if (res.code === 0) {
+      stores.token = "";
+      stores.tokenType = "";
+      stores.isLogin = false;
+    }
+  };
   return {
     loginBtn,
     profileBtn,
+    logout,
   };
 };
 
@@ -155,11 +163,16 @@ const useLoginAndProfile = (router: Router) => {
 const useCommons = () => {
   const isLogin = ref(stores.isLogin);
 
-  const handleCommand = (command: String) => {
+  const handleCommand = async (command: String) => {
     stores.isDebug ? console.log("command value:", command) : "";
-    if (command == "signout") {
-      stores.isLogin = false;
-      isLogin.value = stores.isLogin;
+    if (command == "logout") {
+      let res = await UserService.logout();
+      if (res.code === 0) {
+        stores.token = "";
+        stores.tokenType = "";
+        stores.isLogin = false;
+        isLogin.value = stores.isLogin;
+      }
     }
   };
   return {

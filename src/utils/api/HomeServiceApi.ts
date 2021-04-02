@@ -1,5 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-27 13:17:19
+ * @LastEditTime: 2021-03-29 13:07:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\utils\api\HomeServiceApi.ts
+ */
 // import Axios from "axios";
-import service from "../axios";
+import service from "@/utils/axios";
+import { CommonResult } from "@/utils/api/CommonServiceEntity";
 
 export interface OptionInterface {
   label: string;
@@ -12,11 +21,11 @@ export interface OptionInterface {
   }[];
 }
 
-interface HttpResponse<T> {
-  statusCode: number
-  statusMsg: string
-  data: Array<T>
-}
+// interface HttpResponse<T> {
+//   statusCode: number
+//   statusMsg: string
+//   data: Array<T>
+// }
 
 interface CityModel {
   cityId: string,
@@ -24,7 +33,7 @@ interface CityModel {
 }
 
 interface CityListModel {
-  code: string,
+  cityFirstAlp: string,
   cityList: Array<CityModel>
 }
 interface UserInfo {
@@ -34,14 +43,7 @@ interface UserInfo {
 
 class HomeServiceApi {
   static async fingAllCity(params?: UserInfo) {
-    let res = await service.get<HttpResponse<CityListModel>>('/api/findAllCity', {
-      responseType: 'json'
-    })
-    return res.data
-  }
-
-  static async findAllVisitedCity(params?: UserInfo) {
-    let res = await service.get<HttpResponse<CityModel>>('/api/findAllVisitedCity', {
+    let res = await service.get<CommonResult<CityListModel>>('/api/city/findAllCity', {
       responseType: 'json'
     })
     return res.data

@@ -130,7 +130,7 @@ import {
   AlreadyOrderItemInterface,
   CustomInterface,
   queryAirlineConditionInterface,
-} from "@/components/home/HomeSearchPanel/HomeSearchPanelObj.ts";
+} from "@/components/home/HomeSearchPanel/HomeSearchPanelObj";
 
 export default defineComponent({
   components: {
@@ -184,7 +184,11 @@ const useOrderList = (
   const flag = ref(false);
   provide("isShowDelete", readonly(flag));
   const alreadyOrderList: Ref<Array<AlreadyOrderItemInterface>> = ref([
-    { departure: "", destination: "", date: new Date() },
+    {
+      departure: "",
+      destination: "",
+      date: new Date(),
+    },
   ]);
   //method
   const swapAddress = (index: number) => {
@@ -193,7 +197,7 @@ const useOrderList = (
     alreadyOrderList.value[index].departure =
       alreadyOrderList.value[index].destination;
     alreadyOrderList.value[index].destination = tmp;
-    console.log(tmp);
+    // console.log(tmp);
   };
   const addOrderItem = () => {
     let list: AlreadyOrderItemInterface[] = alreadyOrderList.value;
@@ -207,7 +211,12 @@ const useOrderList = (
           });
         },
       });
-    } else list.push({ departure: "", destination: "", date: new Date() });
+    } else
+      list.push({
+        departure: "",
+        destination: "",
+        date: new Date(),
+      });
   };
   const deleteAirOrder = (index: number) => {
     let list = alreadyOrderList.value;
@@ -254,7 +263,11 @@ const useOrderList = (
       length = nn - length;
       while (length > 0) {
         length--;
-        list.push({ departure: "", destination: "", date: new Date() });
+        list.push({
+          departure: "",
+          destination: "",
+          date: new Date(),
+        });
       }
     }
   });

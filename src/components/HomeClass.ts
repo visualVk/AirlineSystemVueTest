@@ -1,10 +1,19 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-23 15:31:01
+ * @LastEditTime: 2021-04-02 14:03:55
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\HomeClass.ts
+ */
+import { City } from "@/utils/api/AirlineServiceApi"
 import { computed, ComputedRef } from "vue"
 
 export class AlreadyOrderItem {
-  public departure: String
-  public destination: String
+  public departure: City
+  public destination: City
   public date: Date
-  constructor(startPoint: String, endPoint: String, d: Date) {
+  constructor(startPoint: City, endPoint: City, d: Date) {
     this.departure = startPoint
     this.destination = endPoint
     this.date = d

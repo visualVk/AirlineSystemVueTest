@@ -134,7 +134,7 @@ export default defineComponent({
   },
   setup() {
     const _: any = inject("_");
-    const router = useRouter()
+    const router = useRouter();
     return _.merge({}, toRefs(useLogin(router)), toRefs(useRegister(router)));
   },
 });

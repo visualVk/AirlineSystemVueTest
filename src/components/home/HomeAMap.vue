@@ -75,7 +75,7 @@ import { inject, onMounted, reactive } from "vue";
 import { AlreadyOrderItem } from "../HomeClass";
 import { HomeServiceApi } from "@/utils/api/HomeServiceApi";
 import { stores } from "@/utils/store/store";
-import { createMap, findWay } from "@/components/home/AMaSp.ts";
+import { createMap, findWay } from "@/components/home/AMaSp.js";
 export default {
   setup() {
     const placeObj = reactive({

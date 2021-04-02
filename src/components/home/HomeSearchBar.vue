@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-23 11:10:29
+ * @LastEditTime: 2021-04-02 15:01:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\home\HomeSearchBar.vue
+-->
 <template>
   <div class="card">
     <el-row>
@@ -39,6 +47,8 @@ import {
   queryAirlineConditionInterface,
 } from "./HomeSearchPanel/HomeSearchPanelObj";
 import { Router, useRouter } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { stores } from "@/utils/store/store";
 export default {
   components: {
     NoticeBar,
@@ -57,9 +67,21 @@ export default {
 };
 
 const useAirlineOrder = (router: Router) => {
-  const queryAirline = (obj: queryAirlineConditionInterface) => {
-    //TODO: 表单验证
-    router.push("/queryAirline");
+  const queryAirline = (obj: Array<queryAirlineConditionInterface>) => {
+    // stores.isDebug ? console.log(obj.departure == null) : "";
+    if (obj[0].departure == "" || obj[0].destination == "") {
+      //验证是否输入城市
+      ElMessage.error("请选择城市");
+    } else {
+      stores.isDebug ? console.log("obj:", obj[0]) : "";
+      router.push({
+        name: "QueryAirline",
+        params: {
+          departureId: obj[0].departure,
+          destinationId: obj[0].destination,
+        },
+      });
+    }
   };
   return { queryAirline };
 };
