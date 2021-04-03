@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-30 16:08:37
- * @LastEditTime: 2021-04-02 11:51:32
+ * @LastEditTime: 2021-04-03 11:24:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\searchList\SearchSelectBar\SearchSelectBar.vue
@@ -15,18 +15,19 @@
       <!-- 航班公司选择 -->
       <el-row>
         <el-col :span="8">
+          <span style="font: 18px bold">航班公司：</span>
           <el-select
-            v-model="value2"
-            multiple
+            v-model="selectCompany"
             collapse-tags
             style="margin-left: 20px"
             placeholder="选择航空公司"
+            @change="selectChange"
           >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="company in companyList"
+              :key="company.companyId"
+              :label="company.companyName"
+              :value="company.companyId"
             >
             </el-option>
           </el-select>
@@ -59,12 +60,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
+import { stores } from "@/utils/store/store";
+import { defineComponent, inject, reactive, ref, watch } from "vue";
 
 export default defineComponent({
-  setup() {
+  props: {
+    companyList: {
+      default: [{ companyName: "长虹101", companyId: "AC1" }],
+    },
+  },
+  emits: ["pop-company"],
+  setup(props, ctx) {
     const airlineSortRule = inject("airlineSortRule", 0);
-    return { airlineSortRule };
+    const selectCompany = ref("");
+    const selectChange = () => {
+      stores.isDebug ? console.log("[select change]=change!!!") : "";
+      ctx.emit("pop-company", selectCompany);
+    };
+    return { airlineSortRule, selectCompany, selectChange };
   },
 });
 </script>
