@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-31 11:40:39
- * @LastEditTime: 2021-03-18 19:13:17
+ * @LastEditTime: 2021-04-04 17:24:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\store\store.ts
@@ -16,5 +16,14 @@ export let stores = {
     if (this.isDebug) {
       console.log(`login status:${this.isLogin}`);
     }
+  },
+  getIsLogin() {
+    // const tokenInStorage = localStorage.getItem('token')
+    // this.isDebug ? console.log('[token]=', this.token) : ''
+    // if (tokenInStorage != null && tokenInStorage != '') {
+    //   this.isLogin = true;
+    //   this.token = 'Bearer ' + tokenInStorage;
+    // }
+    return this.isLogin
   }
 }

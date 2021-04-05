@@ -4,14 +4,14 @@
       <el-col :span="8">
         <span class="basic_tag">第一程</span>
       </el-col>
-      <el-col :span="8" style="text-align: left">
-        date
+      <el-col :span="4" style="text-align: left">
+        <!-- date -->
         <span class="week">周三</span>
       </el-col>
-      <el-col :span="8" style="text-align: left">
-        温州{{}} &nbsp;
+      <el-col :span="12" style="text-align: left">
+        {{ airlineInfo.departureCity.cityName }} &nbsp;
         <i class="el-icon-d-arrow-right"></i>
-        &nbsp; 上海{{}}
+        &nbsp; {{ airlineInfo.destinationCity.cityName }}
       </el-col>
     </el-row>
     <el-row class="flight_tit">
@@ -22,25 +22,27 @@
             :src="imgUrl"
             fit="fill"
           ></el-image>
-          公司+航班编号{{}}
+          {{ airlineInfo.companyName }}-{{ airlineInfo.airlineName }}
         </span>
       </el-col>
       <el-col :span="6">
-        <span> 舱位编号{{}} </span>
+        <span> 舱位编号{{ seatBO.seatTypeId }} </span>
       </el-col>
       <el-col :span="8">
-        <span> 舱位类型{{}} </span>
+        <span> {{ seatBO.seatTypeName }} </span>
       </el-col>
     </el-row>
     <el-row class="flight_detail">
       <el-col :span="6">
         <div class="flight_depart">
-          <span class="time">14:30{{}}</span>
-          <span class="airport">龙湾国际机场T2{{}}</span>
+          <span class="time">{{ airlineInfo.startTime }}</span>
+          <span class="airport">{{ airlineInfo.departureCity.cityName }}</span>
         </div>
       </el-col>
       <el-col :span="12" class="flight_arrow">
-        <div class="cost_time"><i class="el-icon-timer"></i>2h50m{{}}</div>
+        <div class="cost_time">
+          <i class="el-icon-timer"></i>{{ airlineInfo.hours }}h
+        </div>
         <div class="timeline">
           <el-row>
             <el-col :span="8">
@@ -57,8 +59,10 @@
       </el-col>
       <el-col :span="6">
         <div class="flight_arrive">
-          <span class="time">14:30{{}}</span>
-          <span class="airport">龙湾国际机场T2{{}}</span>
+          <span class="time">{{ airlineInfo.endTime }}</span>
+          <span class="airport">{{
+            airlineInfo.destinationCity.cityName
+          }}</span>
         </div>
       </el-col>
     </el-row>
@@ -66,9 +70,18 @@
 </template>
 
 <script lang="ts">
+import { AirlineInfoImpl, AirlineInfo } from "@/model/AirlineEntity";
+import { SeatBOImpl } from "@/model/SeatBOEntity";
+import { dateFormat } from "@/utils/date/DateFormatUtil";
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
+  props: {
+    airlineInfo: {
+      type: AirlineInfoImpl,
+    },
+    seatBO: SeatBOImpl,
+  },
   setup() {
     const { imgUrl } = useFlight();
     return { imgUrl };

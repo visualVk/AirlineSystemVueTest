@@ -77,9 +77,10 @@
 <script lang='ts'>
 import { inject, ref, toRef, toRefs } from "vue";
 import "@/utils/store/store.ts";
-import { stores } from "@/utils/store/store.ts";
-import { Router, useRouter } from "vue-router";
+import { stores } from "@/utils/store/store";
+import { Router, useRoute, useRouter } from "vue-router";
 import { UserService } from "@/utils/api";
+import router from "@/router";
 export default {
   methods: {},
   setup() {
@@ -142,13 +143,17 @@ const useLoginAndProfile = (router: Router) => {
     //=>/profile/me==1
     router.push({ name: "ProfileMe" });
   };
+  // 使用commond代替，depreacted
   const logout = async () => {
     let res = await UserService.logout();
     if (res.code === 0) {
       stores.token = "";
       stores.tokenType = "";
       stores.isLogin = false;
+      // let rt = useRouter();
     }
+    stores.isDebug ? console.log("[logout]=", "{router}", router) : "";
+    // router.push({ path: "/" });
   };
   return {
     loginBtn,
@@ -172,6 +177,7 @@ const useCommons = () => {
         stores.tokenType = "";
         stores.isLogin = false;
         isLogin.value = stores.isLogin;
+        router.push({ path: "/" });
       }
     }
   };

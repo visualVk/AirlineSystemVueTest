@@ -37,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/order',
-        name: 'order',
+        name: 'Order',
         component: OrderMain
       },
       {
@@ -115,9 +115,9 @@ const router = createRouter({
  * @return {*}
  */
 router.beforeEach((to, from, next) => {
-  stores.isDebug ? console.log(to.params, from.params) : '';
+  stores.isDebug ? console.log('[router guard]=', to.params, from.params) : '';
   if (!isInBlank(to.name)) {
-    if (stores.isLogin) {
+    if (stores.getIsLogin()) {
       next()
     } else {
       next({ name: 'Login' })

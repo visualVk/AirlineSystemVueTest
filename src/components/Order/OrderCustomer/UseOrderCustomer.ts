@@ -23,8 +23,8 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
       { min: 18, max: 18, message: '长度为18个字符', trigger: 'blur' }
     ],
     tel: [
-      { required: false, message: '请输入手机号', trigger: 'blur' },
-      { validator: validator.checkPhone, trigger: 'blur' }
+      { required: false, message: '请输入手机号（目前是邮箱）', trigger: 'blur' },
+      // { validator: validator.checkPhone, trigger: 'blur' }暂时不验证
     ]
   })
   const contactForm = ref({
@@ -38,11 +38,11 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
       { min: 18, max: 18, message: '长度为18个字符', trigger: 'blur' }
     ],
     tel: [
-      { required: false, message: '请输入手机号', trigger: 'blur' },
+      { required: false, message: '请输入手机号（目前是邮箱）', trigger: 'blur' },
       { validator: validator.checkPhone, trigger: 'blur' }
     ]
   })
-  //TODO: 需要再onmouted的时候，通过axios获取常用乘客信息
+  //TODO: 需要再onmouted的时候，通过axios获取常用乘客信息，暂时不加
   const commonCustomerList: Ref<Array<Customer>> = ref([
     { name: "lulu", idCard: "303030303003030303", tel: "1235555412" },
   ]);

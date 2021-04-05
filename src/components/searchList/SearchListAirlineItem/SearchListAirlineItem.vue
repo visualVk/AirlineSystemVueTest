@@ -40,7 +40,6 @@
       <!-- 按钮以及标签区 -->
       <el-col :span="8" style="text-align: right; line-height: 80px">
         <el-space size="10px">
-          <!-- TODO: 之后需要通过数据循环创建 -->
           <el-tag type="success" v-for="i in 4" :key="i">标签三</el-tag>
         </el-space>
         <el-button
@@ -53,11 +52,11 @@
       </el-col>
     </el-row>
     <el-row v-show="isShow" style="background: #f8fafb">
-      <!-- TODO: 未来需要通过数据for循环创建 -->
       <TicketBrieftItem
         v-for="seatBO in airlineInfoObj.seatBOList"
         :key="seatBO.seatTypeId"
         :seatBO="seatBO"
+        :airlineInfo="airlineInfoObj"
         style="border-bottom: 1px solid #e4e7ed"
       ></TicketBrieftItem>
     </el-row>

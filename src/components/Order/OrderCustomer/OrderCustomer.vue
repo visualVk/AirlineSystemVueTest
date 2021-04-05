@@ -118,7 +118,7 @@ import {
 import { Customer } from "@/components/Order/OrderCustomer/OrderCustomer.ts";
 import MessageBox from "element-plus/lib/el-message-box";
 import { EmitsOptions } from "@vue/test-utils/dist/mount";
-import { useCustomers } from "@/components/Order/OrderCustomer/UseOrderCustomer.ts";
+import { useCustomers } from "@/components/Order/OrderCustomer/UseOrderCustomer";
 
 export default defineComponent({
   emits: ["updateNum"],

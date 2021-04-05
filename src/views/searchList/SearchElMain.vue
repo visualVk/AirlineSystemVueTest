@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-28 17:11:42
- * @LastEditTime: 2021-04-03 15:15:40
+ * @LastEditTime: 2021-04-04 15:51:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\searchList\SearchElMain.vue
@@ -64,13 +64,16 @@ const useAirline = () => {
   stores.isDebug ? console.log("route param:", route.params) : "";
   const desId: string = route.params.destinationId as string;
   const depId: string = route.params.departureId as string;
-  stores.isDebug ? console.log("[desId,depId]", desId, depId) : "";
+  const airlineDate: string = route.params.airlineDate as string;
+  stores.isDebug
+    ? console.log("[desId,depId,date]", desId, depId, airlineDate)
+    : "";
   //子空间所需要的querySet
   const querySet = reactive({
     departureCityId: depId,
     destinationCityId: desId,
     supTicketIds: [],
-    airlineDate: dateFormat("YYYY-mm-dd HH:MM:SS", new Date()),
+    airlineDate: dateFormat("YYYY-mm-dd HH:MM:SS", new Date(airlineDate)),
     airlineId: "",
   });
   provide("querySet", querySet);

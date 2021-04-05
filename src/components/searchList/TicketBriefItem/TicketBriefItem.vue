@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-30 14:34:23
- * @LastEditTime: 2021-04-02 11:05:59
+ * @LastEditTime: 2021-04-04 17:34:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\searchList\TicketBriefItem\TicketBriefItem.vue
@@ -58,7 +58,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { dateFormat } from "@/utils/date/DateFormatUtil";
+import { stores } from "@/utils/store/store";
+import { prop } from "node_modules/vue-class-component/dist/vue-class-component";
+import { defineComponent, ref } from "vue";
 import { Router, useRouter } from "vue-router";
 
 export default defineComponent({
@@ -72,17 +75,71 @@ export default defineComponent({
         tot: 0,
       },
     },
+    airlineInfo: {
+      default: {
+        airlineDate: dateFormat("YYYY-mm-dd HH:MM:SS", new Date()),
+        airlineId: "A1",
+        airlineName: "长-105",
+        airlineSeatId: "AS1",
+        hours: 2.5,
+        endTime: "9:00:00",
+        startTime: "10:00:00",
+        companyId: "AC1",
+        companyName: "长虹",
+        companyImg: "",
+        departureCity: {
+          cityFirstAlp: "W",
+          cityId: "C1",
+          cityName: "温州",
+        },
+        destinationCity: {
+          cityFirstAlp: "W",
+          cityId: "C1",
+          cityName: "温州",
+        },
+        seatBOList: [
+          {
+            price: 90,
+            remain: 5,
+            seatTypeId: "ST1",
+            seatTypeName: "经济舱",
+            tot: 0,
+          },
+        ],
+        supEntityBOList: [
+          {
+            ticketTypeId: "TT1",
+            ticketTypeName: "成人",
+          },
+        ],
+      },
+    },
   },
-  setup() {
+  setup(props) {
     const router = useRouter();
-    const { orderBtn } = useCommons(router);
+    const { orderBtn } = useCommons(router, props);
     return { orderBtn };
   },
 });
 
-const useCommons = (router: Router) => {
+const useCommons = (router: Router, props: any) => {
   const orderBtn = () => {
-    router.push({ path: "order" });
+    stores.isDebug
+      ? console.log(
+          "[ticket brieft item]=",
+          "{airline info props}",
+          props.airlineInfo,
+          "{seat bo props}",
+          props.seatBO
+        )
+      : "";
+    router.push({
+      name: "Order",
+      params: {
+        airlineObj: JSON.stringify(props.airlineInfo),
+        seatBO: JSON.stringify(props.seatBO),
+      },
+    });
   };
   return { orderBtn };
 };

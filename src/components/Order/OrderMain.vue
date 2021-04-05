@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-03 11:52:14
+ * @LastEditTime: 2021-04-04 17:36:21
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\Order\OrderMain.vue
+-->
 <template>
   <div class="order_main_container">
     <el-row>
@@ -17,7 +25,10 @@
               box-shadow: 2px 2px 5px #ccc;
             "
           >
-            <OrderTicketBrief></OrderTicketBrief>
+            <OrderTicketBrief
+              :airlineInfo="airlineObj"
+              :seatBO="seatBO"
+            ></OrderTicketBrief>
             <OrderBriefInfo :orderList="orderObj"></OrderBriefInfo>
           </el-row>
         </el-affix>
@@ -32,6 +43,10 @@ import { defineComponent, provide, reactive, ref } from "vue";
 import OrderTicketBrief from "@/components/Order/OrderTicketBrief/OrderTicketBrief.vue";
 import OrderCustomer from "@/components/Order/OrderCustomer/OrderCustomer.vue";
 import OrderBriefInfo from "@/components/Order/OrderBriefInfo/OrderBriefInfo.vue";
+import { useRoute, useRouter } from "vue-router";
+import { stores } from "@/utils/store/store";
+import { AirlineInfo } from "@/model/AirlineEntity";
+import { SeatBO } from "@/utils/api/AirlineServiceApi";
 
 export default defineComponent({
   components: {
@@ -41,9 +56,9 @@ export default defineComponent({
   },
   setup() {
     //TODO: 需要添加订购的机票信息
-    const { orderObj, updateNum } = useCustom();
-
-    return { orderObj, updateNum };
+    const { orderObj, updateNum, airlineObj, seatBO } = useCustom();
+    const {} = useTicket();
+    return { orderObj, updateNum, airlineObj, seatBO };
   },
 });
 
@@ -56,10 +71,35 @@ const useCustom = () => {
     },
   ]);
 
+  const curRoute = useRouter().currentRoute.value;
+  //用于子控件机票信息显示
+  const airlineObj = reactive(JSON.parse(curRoute.params.airlineObj as string));
+  const seatBO = reactive(
+    JSON.parse(curRoute.params.seatBO as string) as SeatBO
+  );
+  stores.isDebug
+    ? console.log(
+        "[airline obj]=",
+        "{airlineObj}",
+        airlineObj,
+        "{seatBO}",
+        seatBO
+      )
+    : "";
   const updateNum = (num: Number) => {
     orderObj[0].num = num.toString();
   };
-  return { orderObj, updateNum };
+  return { orderObj, updateNum, airlineObj, seatBO };
+};
+const useTicket = () => {
+  //TODO: 获取路由中的参数，同时渲染
+  stores.isDebug
+    ? console.log(
+        "[order main]={route param}",
+        useRouter().currentRoute.value.params
+      )
+    : "";
+  return {};
 };
 </script>
 
