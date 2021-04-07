@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-06 10:10:48
- * @LastEditTime: 2021-04-07 20:19:43
+ * @LastEditTime: 2021-04-07 20:38:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\model\TicketEntity.ts

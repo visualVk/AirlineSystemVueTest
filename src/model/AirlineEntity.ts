@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-04 15:59:18
- * @LastEditTime: 2021-04-04 16:10:45
+ * @LastEditTime: 2021-04-07 20:33:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\model\Airline.ts

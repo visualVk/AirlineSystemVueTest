@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-05 10:45:18
- * @LastEditTime: 2021-04-07 16:25:19
+ * @LastEditTime: 2021-04-07 21:24:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\Order\OrderConfirm\OrderConfirm.vue
@@ -13,19 +13,20 @@
       <el-col :span="12" style="padding: 10px">
         <el-row
           style="margin-bottom: 10px; background: white"
-          v-for="i in 4"
-          :key="i"
+          v-for="ticket in ticketList"
+          :key="ticket.ticketId"
         >
           <!-- TODO: for循环生成多个订单 -->
           <OrderListItem
             :isShowCancel="false"
             :isShowDetail="false"
+            :ticket="ticket"
           ></OrderListItem>
         </el-row>
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="6">
-        <OrderPayCol></OrderPayCol>
+        <OrderPayCol :orderList="orderList"></OrderPayCol>
         <div style="padding: 10px; text-align: center; width: 100%">
           <el-button
             style="width: inherit"
@@ -65,15 +66,16 @@ export default defineComponent({
     OrderListItem,
   },
   setup() {
-    const payment = usePayment();
+    // const payment = usePayment();
     const usemain = useMain();
     const _: any = inject("_");
-    return _.merge({}, toRefs(payment), toRefs(usemain));
+    return _.merge({}, toRefs(usemain));
   },
 });
 
 const useMain = () => {
   const ticketList: Ref<Array<AirlineTicketAllBO>> = ref([]);
+  const orderList = ref([{ price: "", num: "", changeFee: "" }]);
   const findTicket = async () => {
     const route = useRouter().currentRoute;
     const payUid = stores.getUser().uid;
@@ -88,6 +90,8 @@ const useMain = () => {
       ticketRes.data.forEach((ticket) => {
         ticketList.value.push(ticket);
       });
+      orderList.value[0].price = ticketList.value[0].price.toString();
+      orderList.value[0].num = ticketList.value.length.toString();
     } else {
       ElMessage.error(ticketRes.message);
     }
@@ -95,17 +99,22 @@ const useMain = () => {
       ? console.log("[Order Confirm]=", "{ticketList}", ticketList.value)
       : "";
   };
+  const paymentCheckBtn = async () => {
+    let payRes = await AirlineInfoServiceApi.payTicket(
+      ticketList.value[0].ticketId
+    );
+    if (payRes.code == 0) {
+      MessageBox.alert("支付成功");
+    } else {
+      MessageBox.alert("支付失败");
+    }
+  };
   onMounted(() => {
     findTicket();
   });
-  return { ticketList, findTicket };
+  return { ticketList, findTicket, paymentCheckBtn, orderList };
 };
-const usePayment = () => {
-  const paymentCheckBtn = () => {
-    MessageBox.alert("支付成功");
-  };
-  return { paymentCheckBtn };
-};
+const usePayment = () => {};
 </script>
 
 <style scoped>
