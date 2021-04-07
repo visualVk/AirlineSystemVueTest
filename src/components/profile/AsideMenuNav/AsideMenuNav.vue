@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-31 12:02:46
+ * @LastEditTime: 2021-04-06 18:38:32
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\profile\AsideMenuNav\AsideMenuNav.vue
+-->
 <template>
   <el-row>
     <el-col :span="12"></el-col>
@@ -18,7 +26,7 @@
         </el-menu-item>
         <el-menu-item index="/profileOrder">
           <i class="el-icon-menu"></i>
-          <template #title>订单</template>
+          <template #title>我的订单</template>
         </el-menu-item>
         <el-menu-item index="/msg">
           <i class="el-icon-document"></i>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-03 15:53:15
- * @LastEditTime: 2021-03-15 12:37:38
+ * @LastEditTime: 2021-04-06 18:47:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\Order\OrderCustomer\OrderCustomer.ts
@@ -10,7 +10,9 @@ export interface Customer {
   [key: string]: any
   idCard: string,
   name: string,
-  tel: string
+  tel: string,
+  preferSeatIndex: number,
+  ticketTypeId: string
 }
 
 export let validator = {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-23 11:10:29
- * @LastEditTime: 2021-04-04 15:46:44
+ * @LastEditTime: 2021-04-07 09:29:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\home\HomeSearchBar.vue
@@ -76,7 +76,7 @@ const useAirlineOrder = (router: Router) => {
       stores.isDebug ? console.log("obj:", obj[0]) : "";
       router.push({
         name: "QueryAirline",
-        params: {
+        query: {
           departureId: obj[0].departure,
           destinationId: obj[0].destination,
           airlineDate: obj[0].date.toString(),

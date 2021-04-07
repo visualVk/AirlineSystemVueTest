@@ -1,3 +1,4 @@
+import { TicketLockSeat } from "@/model/TicketEntity";
 import router from "@/router";
 import { stores } from "@/utils/store/store";
 import MessageBox from "element-plus/lib/el-message-box";
@@ -12,6 +13,8 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
     name: "",
     idCard: "",
     tel: "",
+    preferSeatIndex: 0,
+    ticketTypeId: 'TT1'
   });
   const formRules = ref({
     name: [
@@ -44,7 +47,7 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
   })
   //TODO: 需要再onmouted的时候，通过axios获取常用乘客信息，暂时不加
   const commonCustomerList: Ref<Array<Customer>> = ref([
-    { name: "lulu", idCard: "303030303003030303", tel: "1235555412" },
+    { name: "lulu", idCard: "303030303003030303", tel: "1235555412", preferSeatIndex: 0, ticketTypeId: 'TT1' },
   ]);
   const customerList = ref(new Array<Customer>());
 
@@ -95,7 +98,9 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
 
   //TODO: 下一步事件
   const nextBtn = () => {
-    router.push({ path: '/orderConfirm' })
+    ctx.emit("popCustomerList", customerList.value)
+    stores.isDebug ? console.log('[Order Main]=', '{customerList}', customerList) : ''
+    // router.push({ path: '/orderConfirm' })
   };
   return {
     contactRules,

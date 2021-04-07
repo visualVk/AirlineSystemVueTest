@@ -9,8 +9,8 @@
       <el-space direction="vertical" alignment="start" :size="30">
         <el-radio-group v-model="orderType">
           <el-radio :label="1">单程</el-radio>
-          <el-radio :label="2">往返</el-radio>
-          <el-radio :label="3">多程</el-radio>
+          <!-- <el-radio :label="2">往返</el-radio>
+          <el-radio :label="3">多程</el-radio> -->
         </el-radio-group>
       </el-space>
     </el-col>

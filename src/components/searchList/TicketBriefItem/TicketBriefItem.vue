@@ -135,7 +135,7 @@ const useCommons = (router: Router, props: any) => {
       : "";
     router.push({
       name: "Order",
-      params: {
+      query: {
         airlineObj: JSON.stringify(props.airlineInfo),
         seatBO: JSON.stringify(props.seatBO),
       },

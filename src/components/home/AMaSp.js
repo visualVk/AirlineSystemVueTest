@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-15 11:14:25
- * @LastEditTime: 2021-03-05 18:57:34
+ * @LastEditTime: 2021-04-07 10:26:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\home\AMaSp.ts
@@ -104,6 +104,7 @@ export const addPlugin = () => {
 }
 
 export const findWay = () => {
+  //TODO: 可能要更换地图库
   AMap.plugin('AMap.Driving', function () {
     let pp = document.getElementById("panel")
     pp.innerHTML = ""
@@ -119,6 +120,12 @@ export const findWay = () => {
       stores.isDebug ? console.log('way:', result) : ''
     });
   })
+}
+
+export const decMap = () => {
+  if (!!map) {
+    map.destory();
+  }
 }
 
 /**

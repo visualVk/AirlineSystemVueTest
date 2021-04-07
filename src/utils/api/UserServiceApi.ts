@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-18 18:04:16
- * @LastEditTime: 2021-04-04 17:24:46
+ * @LastEditTime: 2021-04-06 10:45:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\api\UserServiceApi.ts
@@ -19,7 +19,9 @@ interface CommonResult {
   code: Number,
   data: {
     token: string,
-    tokenType: string
+    tokenType: string,
+    uid: number,
+    username: string
   },
   message: String
 }

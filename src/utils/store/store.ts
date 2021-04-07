@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-31 11:40:39
- * @LastEditTime: 2021-04-04 17:24:56
+ * @LastEditTime: 2021-04-06 10:46:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\store\store.ts
@@ -11,6 +11,10 @@ export let stores = {
   isDebug: true,
   tokenType: '',
   token: '',
+  curUser: {
+    uid: 0,
+    username: ''
+  },
   setIsLogin(value: boolean) {
     this.isLogin = value
     if (this.isDebug) {
@@ -25,5 +29,12 @@ export let stores = {
     //   this.token = 'Bearer ' + tokenInStorage;
     // }
     return this.isLogin
+  },
+  getUser() {
+    return this.curUser
+  },
+  setUser(obj: any) {
+    this.curUser.uid = obj.uid;
+    this.curUser.username = obj.username
   }
 }

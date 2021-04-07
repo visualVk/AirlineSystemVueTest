@@ -42,7 +42,7 @@
     <div>
       <el-form
         :model="form"
-        label-width="80px"
+        label-width="100px"
         ref="customerForm"
         :rules="formRules"
       >
@@ -56,8 +56,31 @@
           <el-form-item label="身份证号" prop="idCard">
             <el-input v-model="form.idCard"></el-input>
           </el-form-item>
-          <el-form-item label="手机号" prop="tel">
+          <el-form-item label="邮箱" prop="tel">
             <el-input v-model="form.tel"></el-input>
+          </el-form-item>
+          <el-form-item label="座位偏好选择" prop="preferSeatIndex">
+            <el-radio-group v-model="form.preferSeatIndex">
+              <el-radio
+                v-model="form.preferSeatIndex"
+                v-for="i in seatIndex"
+                :key="i.index"
+                :label="i.index"
+              >
+                {{ i.label }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="票型" prop="ticketTypeId">
+            <el-radio-group v-model="form.ticketTypeId">
+              <el-radio
+                v-for="i in ticketTypeList"
+                :label="i.index"
+                :key="i.index"
+              >
+                {{ i.label }}
+              </el-radio>
+            </el-radio-group>
           </el-form-item>
         </div>
         <div style="margin-top: 20px">
@@ -67,7 +90,7 @@
     </div>
   </div>
   <div class="contact">
-    <div class="box_tit">
+    <!-- <div class="box_tit">
       <h2>联系人</h2>
       <div class="notice_tips">
         <div>订单信息将会发到该联系人手机上</div>
@@ -92,11 +115,16 @@
           </el-form-item>
         </div>
         <div style="margin-top: 20px; width: 100%">
-          <el-button style="width: 100%" @click="nextBtn" type="primary"
-            >下一步</el-button
-          >
+          <el-button style="width: 100%" @click="nextBtn" type="primary">
+            下一步
+          </el-button>
         </div>
       </el-form>
+    </div> -->
+    <div style="margin-top: 20px; width: 100%">
+      <el-button style="width: 100%" @click="nextBtn" type="primary">
+        下一步
+      </el-button>
     </div>
   </div>
 </template>
@@ -115,13 +143,29 @@ import {
   toRefs,
   watch,
 } from "vue";
-import { Customer } from "@/components/Order/OrderCustomer/OrderCustomer.ts";
+import { Customer } from "@/components/Order/OrderCustomer/OrderCustomer";
 import MessageBox from "element-plus/lib/el-message-box";
 import { EmitsOptions } from "@vue/test-utils/dist/mount";
 import { useCustomers } from "@/components/Order/OrderCustomer/UseOrderCustomer";
 
 export default defineComponent({
-  emits: ["updateNum"],
+  emits: ["updateNum", "popCustomerList"],
+  data() {
+    return {
+      seatIndex: [
+        { label: "A", index: 0 },
+        { label: "B", index: 1 },
+        { label: "C", index: 2 },
+        { label: "D", index: 3 },
+        { label: "E", index: 4 },
+      ],
+      ticketTypeList: [
+        { label: "儿童票", index: "TT1" },
+        { label: "成人票", index: "TT2" },
+        { label: "老人票", index: "TT3" },
+      ],
+    };
+  },
   setup(props, ctx: SetupContext<EmitsOptions>) {
     const useCustom = useCustomers(props, ctx);
     const _: any = inject("_");

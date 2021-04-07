@@ -81,6 +81,7 @@ import { stores } from "@/utils/store/store";
 import { Router, useRoute, useRouter } from "vue-router";
 import { UserService } from "@/utils/api";
 import router from "@/router";
+import { ElMessage } from "element-plus";
 export default {
   methods: {},
   setup() {
@@ -150,6 +151,7 @@ const useLoginAndProfile = (router: Router) => {
       stores.token = "";
       stores.tokenType = "";
       stores.isLogin = false;
+      ElMessage.success("用户登出");
       // let rt = useRouter();
     }
     stores.isDebug ? console.log("[logout]=", "{router}", router) : "";

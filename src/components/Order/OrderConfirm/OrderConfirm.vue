@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-05 10:45:18
+ * @LastEditTime: 2021-04-07 16:25:19
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\Order\OrderConfirm\OrderConfirm.vue
+-->
 <template>
   <div class="container">
     <el-row>
@@ -22,7 +30,7 @@
           <el-button
             style="width: inherit"
             type="primary"
-            @click="payment.paymentCheckBtn"
+            @click="paymentCheckBtn"
             >如果支付完成，未跳转，轻点这</el-button
           >
         </div>
@@ -33,10 +41,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  Ref,
+  toRefs,
+} from "vue";
 import OrderPayCol from "@/components/Order/OrderConfirm/OrderPayCol/OrderPayCol.vue";
 import OrderListItem from "@/components/profile/Main/OrderDisplayMain/OrderListItem/OrderListItem.vue";
 import MessageBox from "element-plus/lib/el-message-box";
+import { stores } from "@/utils/store/store";
+import { useRouter } from "vue-router";
+import { AirlineInfoServiceApi } from "@/utils/api";
+import { AirlineTicketAllBO } from "@/model/TicketEntity";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   components: {
@@ -45,9 +66,40 @@ export default defineComponent({
   },
   setup() {
     const payment = usePayment();
-    return { payment };
+    const usemain = useMain();
+    const _: any = inject("_");
+    return _.merge({}, toRefs(payment), toRefs(usemain));
   },
 });
+
+const useMain = () => {
+  const ticketList: Ref<Array<AirlineTicketAllBO>> = ref([]);
+  const findTicket = async () => {
+    const route = useRouter().currentRoute;
+    const payUid = stores.getUser().uid;
+    const airlineSeatId = route.value.query.airlineSeatId as string;
+    let ticketRes = await AirlineInfoServiceApi.findTicketByQuerySet(
+      { airlineSeatId: airlineSeatId, payUid: payUid, status: 0 },
+      1,
+      10
+    );
+    ticketList.value.length = 0;
+    if (ticketRes.code == 0) {
+      ticketRes.data.forEach((ticket) => {
+        ticketList.value.push(ticket);
+      });
+    } else {
+      ElMessage.error(ticketRes.message);
+    }
+    stores.isDebug
+      ? console.log("[Order Confirm]=", "{ticketList}", ticketList.value)
+      : "";
+  };
+  onMounted(() => {
+    findTicket();
+  });
+  return { ticketList, findTicket };
+};
 const usePayment = () => {
   const paymentCheckBtn = () => {
     MessageBox.alert("支付成功");

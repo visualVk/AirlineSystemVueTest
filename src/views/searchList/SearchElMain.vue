@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-28 17:11:42
- * @LastEditTime: 2021-04-04 15:51:35
+ * @LastEditTime: 2021-04-07 09:29:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\searchList\SearchElMain.vue
@@ -32,7 +32,7 @@ import { ElMessage } from "element-plus";
 import { stores } from "@/utils/store/store";
 import { dateFormat } from "@/utils/date/DateFormatUtil";
 import { AirlineInfoQuerySet } from "@/utils/api/AirlineServiceApi";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 export default defineComponent({
   components: {
     HomeSearchPanel,
@@ -60,11 +60,11 @@ export default defineComponent({
 
 const useAirline = () => {
   //从route中获取城市
-  const route = useRoute();
-  stores.isDebug ? console.log("route param:", route.params) : "";
-  const desId: string = route.params.destinationId as string;
-  const depId: string = route.params.departureId as string;
-  const airlineDate: string = route.params.airlineDate as string;
+  const route = useRouter().currentRoute;
+  stores.isDebug ? console.log("route param:", route.value.query) : "";
+  const desId: string = route.value.query.destinationId as string;
+  const depId: string = route.value.query.departureId as string;
+  const airlineDate: string = route.value.query.airlineDate as string;
   stores.isDebug
     ? console.log("[desId,depId,date]", desId, depId, airlineDate)
     : "";
