@@ -30,7 +30,7 @@
                   font-size: 20px;
                 "
               >
-                尊贵的用户{{}}
+                尊贵的用户{{ curUser.userNickname }}
               </div>
               <div
                 style="
@@ -121,37 +121,58 @@
         style="background: white; padding-right: 10px; padding-top: 10px"
       >
         <el-form
-          :model="ruleForm"
-          ref="ruleForm"
+          :model="form"
+          ref="userForm"
           label-width="140px"
           class="demo-ruleForm"
+          :rules="userRule"
         >
           <div style="width: 80%">
-            <el-form-item label="用户昵称" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="用户姓名" prop="userNickname">
+              <el-input
+                v-model="form.userNickname"
+                :disabled="isEdit"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="身份证" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="是否修改密码">
-              <el-switch v-model="ruleForm.isOn"></el-switch>
+            <el-form-item label="身份证" prop="idCard">
+              <el-input v-model="form.idCard" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item
-              label="新密码"
-              prop="newPassword"
-              v-if="ruleForm.isOn"
+              label="是否修改密码"
+              prop="isOn"
+              v-if="isEdit == false"
             >
-              <el-input></el-input>
+              <el-switch v-model="form.isOn"></el-switch>
+            </el-form-item>
+            <el-form-item label="旧密码" prop="opassword" v-if="form.isOn">
+              <el-input
+                v-model="form.opassword"
+                show-password
+                :disabled="isEdit"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="新密码" prop="npassword" v-if="form.isOn">
+              <el-input
+                v-model="form.npassword"
+                show-password
+                :disabled="isEdit"
+              ></el-input>
             </el-form-item>
             <el-form-item
               label="重新输入新密码"
-              prop="reNewPassword"
-              v-if="ruleForm.isOn"
+              prop="rnpassword"
+              v-if="form.isOn"
             >
-              <el-input></el-input>
+              <el-input
+                v-model="form.rnpassword"
+                show-password
+                :disabled="isEdit"
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" v-if="mdBtn.isOn">提交</el-button>
+              <el-button type="primary" v-if="mdBtn.isOn" @click="modifyUserBtn"
+                >提交</el-button
+              >
             </el-form-item>
           </div>
         </el-form>
@@ -169,8 +190,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, inject, reactive, ref, toRefs, watch } from "vue";
 import ProfileAppItem from "@/components/profile/Main/ProfileDisplayMain/ProfileAppItem/ProfileAppItem.vue";
+import { stores } from "@/utils/store/store";
+import { ModifyUserQuery } from "@/model/UserEntity";
+import { ElMessage } from "element-plus";
+import { UserService } from "@/utils/api";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -179,35 +205,117 @@ export default defineComponent({
   data() {
     return {
       size: 55,
-      ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-        isOn: false,
-      },
+      // ruleForm: {
+      //   name: "",
+      //   idCard: "",
+      //   date1: "",
+      //   date2: "",
+      //   delivery: false,
+      //   type: [],
+      //   resource: "",
+      //   desc: "",
+      //   isOn: false,
+      // },
     };
   },
   setup() {
-    const { mdBtn, mdBtnClick } = useMdBtn();
-    return { mdBtn, mdBtnClick };
+    const _: any = inject("_");
+    return _.merge({}, toRefs(useMdBtn()));
   },
 });
 const useMdBtn = () => {
   const textArr = ["开启修改", "取消修改"];
+  const router = useRouter();
+  const curUser = ref(stores.getUser());
+  const userForm = ref(null);
+  const isEdit = ref(true);
+  const form = ref({
+    userNickname: curUser.value.userNickname,
+    idCard: curUser.value.username.substring(1),
+    isOn: false,
+    opassword: "",
+    npassword: "",
+    rnpassword: "",
+  });
+  const userRule = ref({
+    userNickname: [
+      { required: true, message: "请输入姓名", trigger: "blur" },
+      { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+    ],
+    idCard: [
+      { required: true, message: "请输入身份证号", trigger: "blur" },
+      // { min: 18, max: 18, message: "长度为18个字符", trigger: "blur" },
+    ],
+    opassword: [
+      { required: false, message: "请输入邮箱", trigger: "blur" },
+      { min: 4, max: 18, message: "长度4-18位", trigger: "blur" },
+    ],
+    npassword: [
+      { required: false, message: "请输入邮箱", trigger: "blur" },
+      { min: 4, max: 18, message: "长度4-18位", trigger: "blur" },
+    ],
+    rnpassword: [
+      { required: false, message: "请输入邮箱", trigger: "blur" },
+      { min: 4, max: 18, message: "长度4-18位", trigger: "blur" },
+    ],
+  });
   const mdBtn = reactive({
     modifyBtnText: "开启修改",
     isOn: false,
   });
   const mdBtnClick = () => {
     mdBtn.isOn = !mdBtn.isOn;
+    isEdit.value = !isEdit.value;
     mdBtn.modifyBtnText = textArr[mdBtn.isOn ? 1 : 0];
   };
-  return { mdBtn, mdBtnClick };
+  const modifyUserBtn = () => {
+    let el: any = userForm.value;
+    let target = Object.assign({}, form.value);
+    el.validate(async (valid: boolean) => {
+      //校验两次密码是否相同
+      if (target.npassword != null || target.npassword != "") {
+        if (target.npassword != target.rnpassword) {
+          ElMessage.error("两次密码输入不相同");
+          return;
+        }
+      }
+      stores.isDebug
+        ? console.log("[Profile Display Main]=", "{valid}", valid)
+        : "";
+      let userSubmit: ModifyUserQuery = {
+        userNickname: target.userNickname,
+        username: target.idCard,
+        email: undefined,
+        gender: undefined,
+        oldPassword: target.opassword,
+        password: target.npassword,
+      };
+      let modifyRes = await UserService.modifyUser(userSubmit);
+      if (modifyRes.code == 0) {
+        stores.getUser().userNickname = modifyRes.data.userNickname;
+        if (target.isOn) {
+          ElMessage.success("修改成功,2S后跳转到登录页面，重新登录");
+          // setTimeout(() => {}, 2000);
+          let logoutRes = await UserService.logout();
+          router.replace("/login");
+        } else {
+          ElMessage.success("修改成功");
+        }
+      } else {
+        ElMessage.error("修改失败，请重新提交");
+      }
+    });
+  };
+  return {
+    mdBtn,
+    mdBtnClick,
+    curUser,
+    form,
+    userForm,
+    userRule,
+    isEdit,
+    modifyUserBtn,
+  };
 };
 </script>
 

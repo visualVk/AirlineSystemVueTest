@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-31 11:40:39
- * @LastEditTime: 2021-04-06 10:46:17
+ * @LastEditTime: 2021-04-08 13:24:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\store\store.ts
@@ -13,7 +13,8 @@ export let stores = {
   token: '',
   curUser: {
     uid: 0,
-    username: ''
+    username: '',
+    userNickname: ''
   },
   setIsLogin(value: boolean) {
     this.isLogin = value
@@ -36,5 +37,6 @@ export let stores = {
   setUser(obj: any) {
     this.curUser.uid = obj.uid;
     this.curUser.username = obj.username
+    this.curUser.userNickname = obj.userNickname
   }
 }

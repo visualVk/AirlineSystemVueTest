@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-05 10:45:18
- * @LastEditTime: 2021-04-07 21:24:36
+ * @LastEditTime: 2021-04-08 11:40:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\Order\OrderConfirm\OrderConfirm.vue
@@ -32,7 +32,7 @@
             style="width: inherit"
             type="primary"
             @click="paymentCheckBtn"
-            >如果支付完成，未跳转，轻点这</el-button
+            >如果支付完成，点这里跳转</el-button
           >
         </div>
       </el-col>
@@ -55,7 +55,7 @@ import OrderPayCol from "@/components/Order/OrderConfirm/OrderPayCol/OrderPayCol
 import OrderListItem from "@/components/profile/Main/OrderDisplayMain/OrderListItem/OrderListItem.vue";
 import MessageBox from "element-plus/lib/el-message-box";
 import { stores } from "@/utils/store/store";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { AirlineInfoServiceApi } from "@/utils/api";
 import { AirlineTicketAllBO } from "@/model/TicketEntity";
 import { ElMessage } from "element-plus";
@@ -76,6 +76,7 @@ export default defineComponent({
 const useMain = () => {
   const ticketList: Ref<Array<AirlineTicketAllBO>> = ref([]);
   const orderList = ref([{ price: "", num: "", changeFee: "" }]);
+  const router = useRouter();
   const findTicket = async () => {
     const route = useRouter().currentRoute;
     const payUid = stores.getUser().uid;
@@ -104,9 +105,15 @@ const useMain = () => {
       ticketList.value[0].ticketId
     );
     if (payRes.code == 0) {
-      MessageBox.alert("支付成功");
+      MessageBox.alert("支付成功，点击确定跳转回首页", "支付结果", {
+        confirmButtonText: "确定",
+        callback: (action, instance) => {
+          console.log("[Order Confirm]=", `{router}=${router}`);
+          router.replace("/");
+        },
+      });
     } else {
-      MessageBox.alert("支付失败");
+      MessageBox.alert("支付失败", "支付结果");
     }
   };
   onMounted(() => {

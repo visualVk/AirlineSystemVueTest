@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-12 12:42:13
- * @LastEditTime: 2021-04-06 10:46:01
+ * @LastEditTime: 2021-04-08 13:24:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\login\UseLogin.ts
@@ -60,7 +60,7 @@ export const useLogin = (router: Router) => {
           let tokenObj = res.data
           stores.tokenType = tokenObj.tokenType
           stores.token = tokenObj.token
-          stores.setUser({ uid: res.data.uid, username: res.data.username })
+          stores.setUser({ uid: res.data.uid, username: res.data.username, userNickname: res.data.userNickname })
           // console.log(`login:${stores.tokenType}-${stores.token}`);
           router.push({ path: '/' })
           stores.isLogin = true

@@ -12,7 +12,7 @@ import { SeatBO } from "@/model/SeatBOEntity";
 /*
  * @Author: your name
  * @Date: 2021-04-07 09:43:23
- * @LastEditTime: 2021-04-07 15:07:46
+ * @LastEditTime: 2021-04-08 11:42:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\Order\OrderTicketBrief\OrderMain.ts
@@ -93,7 +93,11 @@ export const useCustom = () => {
       //TODO: 利用axios进行位置锁定
       let insertRes = await AirlineInfoServiceApi.insertTicketOrderList(orderLockList, stores.getUser().uid)
       stores.isDebug ? console.log('[Order Main]', '{insert result}', insertRes) : ''
-      router.push({ path: "/orderConfirm", query: { airlineSeatId: airlineObj.airlineSeatId } })
+      if (insertRes.code == 0) {
+        router.push({ path: "/orderConfirm", query: { airlineSeatId: airlineObj.airlineSeatId } })
+      } else {
+        ElMessageBox.alert('乘客中已有预定过该航班的，不可重复预定', '订票出错')
+      }
     }
     else {
       ElMessageBox.alert("是否选择等票", "余票不足", {

@@ -26,7 +26,7 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
       { min: 18, max: 18, message: '长度为18个字符', trigger: 'blur' }
     ],
     tel: [
-      { required: false, message: '请输入手机号（目前是邮箱）', trigger: 'blur' },
+      { required: false, message: '请输入邮箱', trigger: 'blur' },
       // { validator: validator.checkPhone, trigger: 'blur' }暂时不验证
     ]
   })
@@ -41,7 +41,7 @@ export const useCustomers = (props: any, ctx: SetupContext<EmitsOptions>) => {
       { min: 18, max: 18, message: '长度为18个字符', trigger: 'blur' }
     ],
     tel: [
-      { required: false, message: '请输入手机号（目前是邮箱）', trigger: 'blur' },
+      { required: false, message: '请输入邮箱', trigger: 'blur' },
       { validator: validator.checkPhone, trigger: 'blur' }
     ]
   })

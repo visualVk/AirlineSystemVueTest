@@ -1,13 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2021-03-18 18:04:16
- * @LastEditTime: 2021-04-06 10:45:52
+ * @LastEditTime: 2021-04-08 15:41:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\api\UserServiceApi.ts
  */
+import { ModifyUserQuery, UserBO } from '@/model/UserEntity';
 import service from '@/utils/axios'
 import { stores } from '../store/store'
+import { CommonResultPrim } from './CommonServiceEntity';
 interface User {
   isAdmin: Boolean,
   password: String,
@@ -21,7 +23,8 @@ interface CommonResult {
     token: string,
     tokenType: string,
     uid: number,
-    username: string
+    username: string,
+    userNickname: string
   },
   message: String
 }
@@ -40,6 +43,10 @@ class UserService {
     });
     // localStorage.removeItem('token')
     // stores.setIsLogin(false)
+    return res.data
+  }
+  static async modifyUser(modifyUser: ModifyUserQuery) {
+    let res = await service.post<CommonResultPrim<UserBO>>('/api/user/auth/modifyUserInfo', modifyUser);
     return res.data
   }
 }
