@@ -60,9 +60,9 @@
         </el-row>
       </el-col>
       <el-col :span="16">
-        <el-row style="height: 100%; overflow: hidden">
-          <div id="container"></div>
-          <div id="panel"></div>
+        <el-row style="height: 100%" ref="container_fa">
+          <div id="container" ref="container"></div>
+          <div id="panel" class="search_pannel" ref="pannel"></div>
         </el-row>
       </el-col>
       <el-col :span="2"></el-col>
@@ -82,7 +82,7 @@ export default {
       departure: "",
       destination: "",
     });
-    onMounted(createMap);
+    // onMounted(createMap);
     return { placeObj, findWay };
   },
   data() {
@@ -129,11 +129,16 @@ export default {
     },
     submitSearch: function () {},
   },
+  beforeMounted() {
+    decMap();
+  },
   mounted() {
     this.loadCity();
+    createMap();
   },
   destroyed() {
     decMap();
+    console.log("map dec");
   },
 };
 </script>
@@ -177,12 +182,9 @@ export default {
 }
 
 #panel {
-  // position: ab;
   background-color: white;
-  height: 100%;
-  overflow-y: auto;
-  // top: 10px;
-  // right: 10px;
+  max-height: 500px;
+  overflow-y: scroll;
   width: 30%;
 }
 #panel .amap-call {

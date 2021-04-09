@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-02 15:24:22
- * @LastEditTime: 2021-04-09 11:48:36
+ * @LastEditTime: 2021-04-09 13:12:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\profile\Main\OrderDetailMain\OrderDetailMain.vue
@@ -39,14 +39,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive } from "vue";
+import {
+  defineComponent,
+  inject,
+  onMounted,
+  provide,
+  reactive,
+  toRefs,
+} from "vue";
 import OrderProvider from "@/components/profile/Main/OrderDetailMain/OrderProvider/OrderProvider.vue";
 import OrderTicketDetailHead from "@/components/profile/Main/OrderDetailMain/OrderTicketDetail/OrderTicketDetailHead.vue";
-import { AirlineInfoServiceApi } from "@/utils/api";
-import { stores } from "@/utils/store/store";
-import { ElMessage } from "element-plus";
-import { AirlineTicketAllBOImpl } from "@/model/TicketEntity";
-import { useRouter } from "vue-router";
+import { useCommons } from "@/components/profile/Main/OrderDetailMain/OrderDetailMain";
 
 export default defineComponent({
   components: {
@@ -54,39 +57,8 @@ export default defineComponent({
     OrderTicketDetailHead,
   },
   setup() {
-    const ticket = reactive(new AirlineTicketAllBOImpl());
-    provide("ticket", ticket);
-    const route = useRouter().currentRoute;
-    const findTicketById = async () => {
-      let ticketRes = await AirlineInfoServiceApi.findTIcketById(
-        route.value.query.ticketId as string
-      );
-      if (ticketRes.code == 0) {
-        stores.isDebug
-          ? console.log(
-              "[Order Detail Main]",
-              "{ticket result}",
-              ticketRes.data
-            )
-          : "";
-        const ticketResD1 = ticketRes.data[0];
-        const keys = Object.keys(ticketResD1);
-        for (const key of keys) {
-          if (ticketResD1[key] != undefined) {
-            ticket[key] = ticketResD1[key];
-          }
-        }
-        stores.isDebug
-          ? console.log("[Order Ticket Detail]=", "{ticket}", ticket)
-          : "";
-      } else {
-        ElMessage.error("查询出错");
-      }
-    };
-    onMounted(() => {
-      findTicketById();
-    });
-    return {};
+    const _: any = inject("_");
+    return _.merge({}, toRefs(useCommons()));
   },
 });
 </script>
