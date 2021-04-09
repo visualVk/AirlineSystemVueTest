@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-05 10:45:18
- * @LastEditTime: 2021-04-08 11:40:04
+ * @LastEditTime: 2021-04-08 21:10:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\Order\OrderConfirm\OrderConfirm.vue
@@ -82,7 +82,12 @@ const useMain = () => {
     const payUid = stores.getUser().uid;
     const airlineSeatId = route.value.query.airlineSeatId as string;
     let ticketRes = await AirlineInfoServiceApi.findTicketByQuerySet(
-      { airlineSeatId: airlineSeatId, payUid: payUid, status: 0 },
+      {
+        airlineSeatId: airlineSeatId,
+        payUid: payUid,
+        status: 0,
+        username: undefined,
+      },
       1,
       10
     );

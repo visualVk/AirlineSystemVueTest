@@ -10,26 +10,35 @@
       </el-row>
       <el-row class="padding_20 text_left">
         <el-col :span="3" class="ticket_font">订单编号</el-col>
-        <el-col :span="3" class="ticket_normal_font">111{{}}</el-col>
+        <el-col :span="3" class="ticket_normal_font">{{
+          ticket.ticketId
+        }}</el-col>
       </el-row>
       <el-row class="padding_20 text_left">
         <el-col :span="3" class="ticket_font">机票确认号</el-col>
-        <el-col :span="3" class="ticket_normal_font">111{{}}</el-col>
+        <el-col :span="3" class="ticket_normal_font">{{
+          ticket.ticketId
+        }}</el-col>
       </el-row>
       <el-row style="height: 35px"></el-row>
       <el-row style="text-align: right">
         <el-col>
-          <el-button type="primary" plain style="width: 100px">{{
-            btnMsg
-          }}</el-button>
           <el-button
+            type="primary"
+            plain
+            style="width: 100px"
+            v-if="ticket.status != 2 && ticket.status != 5"
+            @click="btnClick"
+            >{{ btnMsg }}</el-button
+          >
+          <!-- <el-button
             type="primary"
             plain
             style="width: 100px"
             v-if="orderDetailObj.ticketStatus != 2"
           >
             改签
-          </el-button>
+          </el-button> -->
         </el-col>
       </el-row>
     </div>
@@ -41,33 +50,52 @@
       <el-row class="padding_5 text_left padding_top_bottom_10 border">
         <el-col :span="5" class="ticket_font">出发时间</el-col>
         <el-col :span="19" style="font-weight: bold">
-          {{ orderDetailObj.airlineDate }}
+          {{ ticket.airlineDate }}
         </el-col>
       </el-row>
       <el-row class="padding_5 text_left padding_top_bottom_10 border">
         <el-col :span="5" class="ticket_font">乘客姓名</el-col>
         <el-col :span="19" style="font-weight: bold">{{
-          orderDetailObj.username
+          ticket.userNickname
         }}</el-col>
       </el-row>
       <el-row class="padding_5 text_left padding_top_bottom_10 border">
         <el-col :span="5" class="ticket_font">座位信息</el-col>
         <el-col :span="19" style="font-weight: bold">{{
-          orderDetailObj.ticketStatus
+          ticket.seatDetailInfoIndex
         }}</el-col>
       </el-row>
       <el-row class="padding_5 text_left padding_top_bottom_10 border">
-        <el-col :span="5" class="ticket_font">手机号</el-col>
-        <el-col :span="19" style="font-weight: bold">{{}}</el-col>
+        <el-col :span="5" class="ticket_font">邮箱</el-col>
+        <el-col :span="19" style="font-weight: bold">463806017@qq.com</el-col>
       </el-row>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, toRef } from "vue";
-import { OrderDetailImpl } from "@/components/profile/Main/OrderDetailMain/OrderTicketDetail/OrderTicketDetailHead.ts";
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  Ref,
+  toRef,
+  toRefs,
+} from "vue";
+import { OrderDetailImpl } from "@/components/profile/Main/OrderDetailMain/OrderTicketDetail/OrderTicketDetailHead";
 import dayjs from "dayjs";
+import { useRouter } from "vue-router";
+import { AirlineInfoServiceApi } from "@/utils/api";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { stores } from "@/utils/store/store";
+import {
+  AirlineTicketAllBO,
+  AirlineTicketAllBOImpl,
+} from "@/model/TicketEntity";
+import router from "@/router";
 export default defineComponent({
   props: {
     orderDetailObj: {
@@ -84,32 +112,94 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { btnMsg, hintMsg } = useCommons(props);
-    return { btnMsg, hintMsg };
+    const _: any = inject("_");
+    return _.merge({}, toRefs(useCommons(props)));
   },
 });
 
 const useCommons = (props: any) => {
-  const obj: Ref<OrderDetailImpl> = toRef(props, "orderDetailObj");
+  // const ticket = reactive(new AirlineTicketAllBOImpl());
+  // const route = useRouter().currentRoute;
+  const ticket = inject("ticket") as AirlineTicketAllBO;
   const hintMsg = computed(() => {
-    if (obj.value.ticketStatus == 0) {
+    if (ticket.status == 0 || ticket.status == 3) {
       return "未支付";
-    } else if (obj.value.ticketStatus == 1) {
+    } else if (ticket.status == 1) {
       return "已支付";
-    } else if (obj.value.ticketStatus == 2) {
+    } else if (ticket.status == 2) {
       return "取消订单";
-    } else return "";
+    } else if (ticket.status == 4) return "等票中";
   });
   const btnMsg = computed(() => {
-    if (obj.value.ticketStatus == 1) {
+    if (ticket.status == 1) {
       return "取消订单";
-    } else if (obj.value.ticketStatus == 0) {
-      return "支付";
-    } else if (obj.value.ticketStatus == 2) {
+    } else if (ticket.status == 0 || ticket.status == 3) {
+      return "支付订单";
+    } else {
       return "";
     }
   });
-  return { btnMsg, hintMsg };
+  const cancelOrder = async () => {
+    ElMessageBox.alert("确定取消订单？", "警告", {
+      cancelButtonText: "取消",
+      showCancelButton: true,
+      confirmButtonText: "确定",
+      callback: async (action, instance) => {
+        if (action == "confirm") {
+          let cancelRes = await AirlineInfoServiceApi.cancelTicketOrder(
+            ticket.ticketId
+          );
+          if (cancelRes.code == 0) {
+            ElMessage.success("取消成功");
+            let res = await AirlineInfoServiceApi.findTIcketById(
+              ticket.ticketId
+            );
+            if (res.code == 0) {
+              ticket.status = res.data[0].status;
+            }
+          } else {
+            ElMessage.error(cancelRes.message);
+          }
+        }
+      },
+    });
+  };
+  const payOrder = async () => {
+    ElMessageBox.alert("确定支付订单？", "警告", {
+      cancelButtonText: "取消",
+      showCancelButton: true,
+      confirmButtonText: "确定",
+      callback: async (action, instance) => {
+        if (action == "confirm") {
+          let cancelRes = await AirlineInfoServiceApi.payTicket(
+            ticket.ticketId
+          );
+          if (cancelRes.code == 0) {
+            ElMessage.success("支付成功");
+            let res = await AirlineInfoServiceApi.findTIcketById(
+              ticket.ticketId
+            );
+            if (res.code == 0) {
+              ticket.status = res.data[0].status;
+            }
+          } else {
+            ElMessage.error(cancelRes.message);
+          }
+        }
+      },
+    });
+  };
+  const btnClick = () => {
+    if (btnMsg.value == "取消订单") {
+      cancelOrder();
+    } else {
+      payOrder();
+    }
+  };
+  // onMounted(() => {
+  //   findTicketById();
+  // });
+  return { btnMsg, hintMsg, ticket, cancelOrder, btnClick, payOrder };
 };
 </script>
 

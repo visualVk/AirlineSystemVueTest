@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-01 18:04:13
+ * @LastEditTime: 2021-04-08 22:47:59
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\profile\Main\OrderDisplayMain\OrderSearchBar\OrderSearchBar.vue
+-->
 <template>
   <div class="order_search_container">
     <el-row>
@@ -10,16 +18,16 @@
         >
           <!-- TODO: 需要修改表单 -->
           <el-form-item label="筛选规则" prop="sort">
-            <el-radio-group v-model="ruleForm.sort">
+            <el-radio-group v-model="ruleForm.sort" @change="sortChange">
               <el-radio label="1">按时间排序-升序</el-radio>
               <el-radio label="2">按时间排序-降序</el-radio>
               <el-radio label="3">按价格排序-升序</el-radio>
               <el-radio label="4">按价格排序-降序</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </el-col>
       <el-col :span="6"></el-col>
@@ -34,17 +42,21 @@ export default defineComponent({
   data() {
     return {
       ruleForm: {
-        sort: "2",
+        sort: "1",
       },
       formInline: {
         sort: "1",
       },
     };
   },
+  emits: ["popSort"],
   methods: {
     onSubmit() {
       //TODO: 需要修改提交方法
       console.log(this.ruleForm);
+    },
+    sortChange(label: number) {
+      this.$emit("popSort", label);
     },
   },
   setup() {

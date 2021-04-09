@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-06 10:10:48
- * @LastEditTime: 2021-04-07 20:38:21
+ * @LastEditTime: 2021-04-09 10:50:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\model\TicketEntity.ts
@@ -43,7 +43,7 @@ export interface AirlineTicketAllBO {
   seatDetailInfoIndex: string,
   seatTypeId: string,
   seatTypeName: string,
-  status: 0,
+  status: number,
   ticketId: string,
   ticketTypeId: string,
   ticketTypeName: string,
@@ -63,7 +63,7 @@ export class AirlineTicketAllBOImpl implements AirlineTicketAllBO {
   seatDetailInfoIndex!: string;
   seatTypeId!: string;
   seatTypeName!: string;
-  status!: 0;
+  status!: number;
   ticketId!: string;
   ticketTypeId!: string;
   ticketTypeName!: string;
@@ -73,7 +73,8 @@ export class AirlineTicketAllBOImpl implements AirlineTicketAllBO {
 }
 
 export interface TicketQuery {
-  payUid: number,
-  airlineSeatId: string,
-  status: number | undefined
+  payUid: number | undefined,
+  airlineSeatId: string | undefined,
+  status: number | undefined,
+  username: string | undefined
 }

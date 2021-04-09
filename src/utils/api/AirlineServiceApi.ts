@@ -5,7 +5,7 @@ import { CommonResult, CommonResultPrim } from "./CommonServiceEntity";
 /*
  * @Author: your name
  * @Date: 2021-03-29 11:57:06
- * @LastEditTime: 2021-04-07 21:29:55
+ * @LastEditTime: 2021-04-09 12:45:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit  
  * @FilePath: \vue-airline-01\src\utils\api\AirlineServiceApi.ts
@@ -75,12 +75,16 @@ export class AirlineInfoServiceApi {
     let result = await service.post<CommonResult<AirlineTicketAllBO>>(`/api/ticket/findTicketByQuerySet?page=${page}&size=${size}`, query)
     return result.data
   }
-  static async cancelTicketOrder(ticketID: string) {
-    let result = await service.delete<CommonResult<AirlineInfoAllBO>>('/api/ticket/cancelTicketOrder', { data: { ticketId: ticketID } })
+  static async findTIcketById(ticketId: string) {
+    let result = await service.post<CommonResult<AirlineTicketAllBO>>(`/api/ticket/findTicketByQuerySet?page=1&size=1`, { ticketId: ticketId })
     return result.data
   }
-  static async payTicket(ticketId: string,) {
-    let result = await service.post<CommonResult<AirlineInfoAllBO>>('/api/ticket/updateTicketOrder', { ticketId: ticketId })
+  static async cancelTicketOrder(ticketID: string) {
+    let result = await service.post<CommonResult<AirlineTicketAllBO>>('/api/ticket/cancelTicketOrder', { ticketId: ticketID })
+    return result.data
+  }
+  static async payTicket(ticketId: string) {
+    let result = await service.post<CommonResult<AirlineTicketAllBO>>('/api/ticket/updateTicketOrder', { ticketId: ticketId })
     return result.data
   }
 }

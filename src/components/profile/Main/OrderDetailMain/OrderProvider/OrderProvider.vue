@@ -11,7 +11,9 @@
         </el-col>
         <el-col :span="14">
           <el-row>
-            <p class="provider_title">{{ providerObj.title }}</p>
+            <p class="provider_title">{{ airlineInfoAllBO.airlineName }}</p>
+          </el-row>
+          <el-row>
             <div class="score_panel">
               <span class="score">{{ providerObj.score }}</span
               >/5
@@ -25,7 +27,7 @@
       <el-row style="background: white">
         <div class="m_priceDetail_content">
           <ul class="supplementDesc">
-            <li>您的预订已取消。</li>
+            <li>{{ orderMsg }}</li>
           </ul>
           <el-row class="priceList">
             <el-col :span="12">
@@ -35,7 +37,7 @@
               <span class="priceCell">
                 <div class="u-price">
                   <span class="u-price_currency">￥</span>
-                  <span class="u-price_num">636.00</span>
+                  <span class="u-price_num">{{ ticket.price }}</span>
                 </div>
               </span>
             </el-col>
@@ -47,8 +49,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { OrderProviderImpl } from "@/components/profile/Main/OrderDetailMain/OrderProvider/OrderProvider.ts";
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  toRefs,
+} from "vue";
+import { OrderProviderImpl } from "@/components/profile/Main/OrderDetailMain/OrderProvider/OrderProvider";
+import { AirlineTicketAllBO } from "@/model/TicketEntity";
+import { AirlineInfoServiceApi } from "@/utils/api";
+import { AirlineInfoImpl } from "@/model/AirlineEntity";
+import { sourceCopy2Target } from "@/utils/object/ObjectUtil";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   props: {
@@ -64,9 +79,47 @@ export default defineComponent({
     },
   },
   setup() {
-    return {};
+    const _: any = inject("_");
+    return _.merge({}, toRefs(useCommons()));
   },
 });
+
+const useCommons = () => {
+  const airlineInfoAllBO = reactive(new AirlineInfoImpl());
+  const ticket = inject("ticket") as AirlineTicketAllBO;
+  const orderMsg = computed(() => {
+    const status = ticket.status;
+    if (status == 2) {
+      return "您的预定已取消";
+    } else {
+      return "您的订单正在处理";
+    }
+  });
+  const findAirlineInfoById = async () => {
+    let airlineRes = await AirlineInfoServiceApi.findAirlineInfoByQuerySet({
+      departureCityId: undefined,
+      destinationCityId: undefined,
+      supTicketIds: undefined,
+      airlineDate: undefined,
+      airlineId: ticket.airlineId,
+    });
+    if (airlineRes.code == 0) {
+      const airlineResD1 = airlineRes.data[0];
+      const keys = Object.keys(airlineResD1);
+      for (const key of keys) {
+        if (airlineResD1[key] != undefined) {
+          airlineInfoAllBO[key] = airlineResD1[key];
+        }
+      }
+    } else {
+      ElMessage.error("查询出错");
+    }
+  };
+  onMounted(() => {
+    findAirlineInfoById();
+  });
+  return { findAirlineInfoById, ticket, airlineInfoAllBO, orderMsg };
+};
 </script>
 
 <style scoped>
