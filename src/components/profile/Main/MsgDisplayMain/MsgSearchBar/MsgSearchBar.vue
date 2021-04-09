@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-01 15:57:09
+ * @LastEditTime: 2021-04-09 21:45:34
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\profile\Main\MsgDisplayMain\MsgSearchBar\MsgSearchBar.vue
+-->
 <template>
   <div class="msg_search_container">
     <el-row>
@@ -9,15 +17,9 @@
           size="mini"
         >
           <!-- TODO: 需要修改表单 -->
-          <el-form-item label="发送时间">
-            <el-select v-model="formInline.region" placeholder="选择时间">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="信息标题">
             <el-input
-              v-model="formInline.user"
+              v-model="formInline.title"
               placeholder="信息标题"
             ></el-input>
           </el-form-item>
@@ -35,13 +37,19 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  emits: ["popTitle"],
   data() {
     return {
       formInline: {
-        user: "",
+        title: "",
         region: "",
       },
     };
+  },
+  methods: {
+    onSubmit() {
+      this.$emit("popTitle", this.formInline.title);
+    },
   },
   setup() {
     return {};

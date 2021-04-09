@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <MsgSearchBar></MsgSearchBar>
+    <MsgSearchBar @popTitle="popTitle"></MsgSearchBar>
   </div>
   <div style="height: 20px"></div>
   <div class="msg_container">
@@ -22,13 +22,14 @@
       <el-col :span="4" class="msg_title_font">操作</el-col>
     </el-row>
     <el-checkbox-group
-      v-model="checkedCities"
+      v-model="checkedMsgIdList"
       @change="handleCheckedCitiesChange"
     >
       <!-- TODO: 之后需要借助数据进行遍历生成 -->
       <MsgListItem
-        v-for="(i, index) in 4"
-        :key="i"
+        v-for="(msg, index) in showMsgList"
+        :key="msg.msgId"
+        :msgObj="msg"
         @operateBtn="operateBtn(index)"
       ></MsgListItem>
     </el-checkbox-group>
@@ -37,12 +38,11 @@
       <el-col :span="2"></el-col>
       <el-col :span="20">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          v-model:currentPage="currentPage1"
-          :page-size="10"
+          v-model:currentPage="page.currentPage"
+          :page-size="page.pagesize"
           layout="total, prev, pager, next"
-          :total="100"
+          :total="page.total"
         >
         </el-pagination>
       </el-col>
@@ -56,7 +56,9 @@ import { defineComponent, inject, toRef, toRefs } from "vue";
 import MsgSearchBar from "@/components/profile/Main/MsgDisplayMain/MsgSearchBar/MsgSearchBar.vue";
 import MsgListItem from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem.vue";
 import { stores } from "@/utils/store/store";
-
+import { MsgServiceApi } from "@/utils/api";
+import { MsgVoImpl } from "@/model/MsgEntity";
+const msgIdOList = [""];
 export default defineComponent({
   components: {
     MsgSearchBar,
@@ -67,24 +69,83 @@ export default defineComponent({
       //TODO:未来需要修改
       isIndeterminate: true,
       checkAll: false,
-      cities: ["上海", "北京", "广州", "深圳"],
-      checkedCities: ["上海", "北京"],
+      msgIdList: [""],
+      checkedMsgIdList: [""],
+      msgList: [new MsgVoImpl()],
+      msgListAfterFilter: [new MsgVoImpl()],
+      showMsgList: [new MsgVoImpl()],
+      page: {
+        total: 0,
+        pagesize: 5,
+        currentPage: 1,
+      },
     };
   },
   methods: {
+    handleCurrentChange(page: number) {
+      this.showMsgList = this.msgListAfterFilter.slice(
+        (page - 1) * this.page.pagesize,
+        page * this.page.pagesize
+      );
+    },
     handleCheckAllChange(val: any) {
       // console.log(val);
-      this.checkedCities = val ? ["上海", "北京", "广州", "深圳"] : [];
+      this.checkedMsgIdList = val
+        ? this.msgListAfterFilter.map((msg) => msg.msgId)
+        : [];
+      console.log(this.checkedMsgIdList);
+      // this.checkAll = true;
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value: any) {
-      // console.log(value);
+      console.log(value);
       let checkedCount = value.length;
       // console.log(checkedCount);
-      this.checkAll = checkedCount === this.cities.length;
+      this.checkAll = checkedCount == this.msgListAfterFilter.length;
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.cities.length;
+        checkedCount > 0 && checkedCount < this.msgListAfterFilter.length;
     },
+    async findMsgByUsername() {
+      let res = await MsgServiceApi.findMsgByUsername(
+        stores.getUser().username.substring(1)
+      );
+      if (res.code == 0) {
+        this.msgIdList = res.data.map((msg) => msg.msgId);
+        this.checkedMsgIdList = [];
+        msgIdOList.length = 0;
+        res.data.forEach((msg) => msgIdOList.push(msg.msgId));
+        this.page.total = res.data.length;
+        this.checkAll = false;
+        this.msgList = res.data;
+        this.msgListAfterFilter = res.data;
+        this.showMsgList = res.data.slice(0, this.page.pagesize);
+        stores.isDebug
+          ? console.log("[Msg Display Main]=", "{msg list}", this.msgList)
+          : "";
+      }
+    },
+    popTitle(title: string) {
+      stores.isDebug ? console.log("[Msg Display Main]", "{title}", title) : "";
+      if (title == null || title == "") {
+        this.msgListAfterFilter = this.msgList;
+      } else {
+        this.msgListAfterFilter = this.msgList.filter((msg) => {
+          return msg.msgName.includes(title, 0);
+        });
+        stores.isDebug
+          ? console.log(
+              "[Msg Display Main]",
+              "{msg list after filter}",
+              this.msgListAfterFilter
+            )
+          : "";
+      }
+      this.page.total = this.msgListAfterFilter.length;
+      this.showMsgList = this.msgListAfterFilter.slice(0, this.page.pagesize);
+    },
+  },
+  mounted() {
+    this.findMsgByUsername();
   },
   setup() {
     // TODO: 之后通过axios获取数据，进行for循环创建标签处元素

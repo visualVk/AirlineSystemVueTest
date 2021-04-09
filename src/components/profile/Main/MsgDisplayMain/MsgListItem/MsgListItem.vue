@@ -1,7 +1,15 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-01 17:26:11
+ * @LastEditTime: 2021-04-09 21:28:48
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-airline-01\src\components\profile\Main\MsgDisplayMain\MsgListItem\MsgListItem.vue
+-->
 <template>
   <el-row class="container">
     <el-col :span="2">
-      <el-checkbox :label="msgObj.title"
+      <el-checkbox :label="msgObj.msgId"
         ><span class="msg_title_font"></span
       ></el-checkbox>
     </el-col>
@@ -10,47 +18,55 @@
         href="javascript:void(0);"
         type="primary"
         @click="showTitleBtn"
-        >{{ msgObj.title }}</el-link
+        >{{ msgObj.msgName }}</el-link
       >
     </el-col>
     <el-col :span="4" class="msg_title_font">{{ msgObj.date }}</el-col>
     <el-col :span="4" class="msg_title_font">
       <el-link type="primary" href="javascript:void(0);" @click="operatorBtn">
-        {{ msgObj.operator }}
+        点击{{}}
       </el-link>
     </el-col>
   </el-row>
   <el-row style="min-height: 100px" v-show="isShowTitle">
     <div class="msg_detail_container">
-      <p>{{ msgObj.msgDetail }}</p>
+      <p>{{ msgObj.msgContent }}</p>
       <p>{{ msgObj.date }}</p>
     </div>
   </el-row>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, SetupContext, toRef, toRefs } from "vue";
+import {
+  defineComponent,
+  inject,
+  ref,
+  SetupContext,
+  toRef,
+  toRefs,
+  watch,
+} from "vue";
 import dayjs from "dayjs";
-import { MsgListItem } from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem.ts";
+import { MsgListItem } from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem";
 import { EmitsOptions } from "@vue/test-utils/dist/mount";
+import { MsgVo, MsgVoImpl } from "@/model/MsgEntity";
+import { prop } from "node_modules/vue-class-component/dist/vue-class-component";
+import { stores } from "@/utils/store/store";
 export default defineComponent({
   emits: ["operateBtn"],
   props: {
     msgObj: {
-      type: MsgListItem,
-      default: {
-        title: "上海",
-        date: dayjs(new Date()).format("YYYY-MM-DD"),
-        operator: "删除",
-        msgDetail:
-          "尊敬的用户:您的现金余额收入96.00元(转账 转账)，点击此处查看",
-      },
+      type: MsgVoImpl,
     },
   },
   setup(props, ctx: SetupContext<EmitsOptions>) {
     // const { isShowTitle, showTitleBtn } = useTitle(ctx);
     const _: any = inject("_");
-
+    const msg = ref(props.msgObj);
+    stores.isDebug ? console.log("[Msg List Item]=", "{msg}", msg) : "";
+    watch(msg, (nn, oo) => {
+      stores.isDebug ? console.log("[Msg List Item]=", "{msg}", msg) : "";
+    });
     return _.merge({}, toRefs(useTitle(ctx)));
   },
 });
