@@ -40,6 +40,7 @@
                   type="primary"
                   class="submit_btn"
                   @click="submitForm('loginForm')"
+                  :disable="enLogin"
                   >登录</el-button
                 >
               </el-form-item>
@@ -96,6 +97,7 @@
                   type="primary"
                   class="submit_btn"
                   @click="submitRegForm('loginForm')"
+                  :disable="enRegister"
                   >注册</el-button
                 >
               </el-form-item>
@@ -117,8 +119,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, toRefs } from "vue";
-import { useLogin } from "@/views/login/UseLogin.ts";
-import { useRegister } from "@/views/login/UseRegister.ts";
+import { useLogin } from "@/views/login/UseLogin";
+import { useRegister } from "@/views/login/UseRegister";
 import { useRouter } from "vue-router";
 
 export default defineComponent({

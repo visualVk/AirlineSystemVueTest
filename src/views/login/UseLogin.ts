@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-12 12:42:13
- * @LastEditTime: 2021-04-08 13:24:07
+ * @LastEditTime: 2021-04-10 11:58:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\login\UseLogin.ts
@@ -23,6 +23,7 @@ interface LoginUser {
 }
 
 export const useLogin = (router: Router) => {
+  const enLogin = ref(true)
   const loginForm = ref()
   const loginUser = reactive<LoginUser>({
     username: "",
@@ -54,8 +55,10 @@ export const useLogin = (router: Router) => {
       if (valid) {
         //TODO: 登录请求
         // stores.isDebug ? console.log('login form value:', valid) : '';
+        enLogin.value = false;
         let res = await UserService.login({ username: loginUser.username, password: loginUser.password, rememberMe: false, isAdmin: false })
         // stores.isDebug ? console.log(res) : ''
+        enLogin.value = true
         if (res.code === 0) {
           let tokenObj = res.data
           stores.tokenType = tokenObj.tokenType
@@ -68,5 +71,5 @@ export const useLogin = (router: Router) => {
       }
     });
   }
-  return { loginForm, loginUser, rules, submitForm }
+  return { loginForm, loginUser, rules, submitForm, enLogin }
 }

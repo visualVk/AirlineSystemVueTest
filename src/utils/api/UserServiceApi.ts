@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-18 18:04:16
- * @LastEditTime: 2021-04-08 15:41:38
+ * @LastEditTime: 2021-04-10 11:57:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\utils\api\UserServiceApi.ts
@@ -26,7 +26,7 @@ interface CommonResult {
     username: string,
     userNickname: string
   },
-  message: String
+  message: string
 }
 
 class UserService {
@@ -35,6 +35,10 @@ class UserService {
       responseType: 'json'
     })
     // localStorage.setItem('token', res.data.data.token);
+    return res.data
+  }
+  static async register(user: User) {
+    let res = await service.post<CommonResult>('/api/user/auth/register', user)
     return res.data
   }
   static async logout() {

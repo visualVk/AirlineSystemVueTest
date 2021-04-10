@@ -1,14 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2021-02-12 13:52:29
- * @LastEditTime: 2021-02-13 11:12:06
- * @LastEditors: your name
+ * @LastEditTime: 2021-04-10 11:59:10
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\login\UseRegister.ts
  */
+import { UserService } from "@/utils/api"
 import { stores } from "@/utils/store/store"
 import { EmitsOptions } from "@vue/test-utils/dist/mount"
-import { ElForm } from "element-plus"
+import { ElForm, ElMessage } from "element-plus"
 import { reactive, Ref, ref, SetupContext } from "vue"
 import { Router } from "vue-router"
 
@@ -19,6 +20,7 @@ interface RegisterUser {
 }
 
 export const useRegister = (router: Router) => {
+  const enRegister = ref(true)
   const registerForm = ref()
   const registerUser = reactive<RegisterUser>({
     username: "",
@@ -61,14 +63,22 @@ export const useRegister = (router: Router) => {
     ]
   })
   const submitRegForm = () => {
-    registerForm.value.validate((valid: Boolean) => {
+    registerForm.value.validate(async (valid: Boolean) => {
       if (valid) {
         //TODO: 注册请求
+        enRegister.value = false;
+        let res = await UserService.register({ isAdmin: false, username: registerUser.username, password: registerUser.password, rememberMe: true })
+        enRegister.value = true;
+        if (res.code == 0) {
+          ElMessage.success('注册成功，请手动进行登录')
+        } else {
+          ElMessage.error(res.message)
+        }
         stores.isDebug ? console.log('login form value:', valid) : '';
       }
     });
   }
-  return { registerForm, registerUser, registerRules, submitRegForm }
+  return { registerForm, registerUser, registerRules, submitRegForm, enRegister }
 }
 const MyValidtor = (form: RegisterUser) => {
   const passwordSame = (rule: any, value: String, callback: any) => {

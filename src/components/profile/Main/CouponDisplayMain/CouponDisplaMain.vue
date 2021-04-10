@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <MsgSearchBar></MsgSearchBar>
+    <MsgSearchBar @popTitle="popTitle"></MsgSearchBar>
   </div>
   <div style="height: 20px"></div>
   <div class="msg_container">
@@ -22,28 +22,27 @@
       <el-col :span="4" class="msg_title_font">操作</el-col>
     </el-row>
     <el-checkbox-group
-      v-model="checkedCities"
+      v-model="checkedCouponIdList"
       @change="handleCheckedCitiesChange"
     >
       <!-- TODO: 之后需要借助数据进行遍历生成 -->
-      <MsgListItem
-        v-for="(i, index) in couponList"
-        :key="i.title"
-        :msgObj="i"
+      <coupon-list-item
+        v-for="(coupon, index) in showCouponList"
+        :key="coupon.couponId"
+        :couponItem="coupon"
         @operateBtn="operateBtn(index)"
-      ></MsgListItem>
+      ></coupon-list-item>
     </el-checkbox-group>
     <!--end  -->
     <el-row style="text-align: center">
       <el-col :span="2"></el-col>
       <el-col :span="20">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          v-model:currentPage="currentPage1"
-          :page-size="10"
+          v-model:currentPage="page.currentPage1"
+          :page-size="page.pagesize"
           layout="total, prev, pager, next"
-          :total="totolSize"
+          :total="page.total"
         >
         </el-pagination>
       </el-col>
@@ -58,49 +57,97 @@ import MsgSearchBar from "@/components/profile/Main/MsgDisplayMain/MsgSearchBar/
 import MsgListItem from "@/components/profile/Main/MsgDisplayMain/MsgListItem/MsgListItem.vue";
 import { stores } from "@/utils/store/store";
 import dayjs from "dayjs";
-
+import { CouponServiceApi } from "@/utils/api";
+import { ElMessage } from "element-plus";
+import { CouponVOImpl } from "@/model/CouponEntity";
+import CouponListItem from "./CouponListItem/CouponListItem.vue";
+const couponIdOList = [""];
 export default defineComponent({
   components: {
     MsgSearchBar,
     MsgListItem,
+    CouponListItem,
   },
   data() {
     return {
       //TODO:未来需要修改
       isIndeterminate: true,
       checkAll: false,
-      cities: ["上海", "北京", "广州", "深圳"],
-      checkedCities: ["上海", "北京"],
-      couponList: [
-        //显示模型
-        {
-          title: "上海",
-          msgDetail: "",
-          date: dayjs(new Date()).format("YYYY-MM-DD"),
-          operator: "立刻使用",
-        },
-      ],
+      couponIdList: [""],
+      checkedCouponIdList: [""],
+      couponList: [new CouponVOImpl()],
+      couponListAfterFilter: [new CouponVOImpl()],
+      showCouponList: [new CouponVOImpl()],
+      page: {
+        total: 0,
+        pagesize: 5,
+        currentPage: 1,
+      },
     };
   },
-  computed: {
-    totolSize() {
-      this.$data.couponList.length;
-    },
-  },
   methods: {
+    handleCurrentChange(page: number) {
+      this.showCouponList = this.showCouponList.slice(
+        (page - 1) * this.page.pagesize,
+        page * this.page.pagesize
+      );
+    },
     handleCheckAllChange(val: any) {
       // console.log(val);
-      this.checkedCities = val ? ["上海", "北京", "广州", "深圳"] : [];
+      this.checkedCouponIdList = val
+        ? this.couponListAfterFilter.map((coupon) => coupon.couponId)
+        : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value: any) {
       // console.log(value);
       let checkedCount = value.length;
       // console.log(checkedCount);
-      this.checkAll = checkedCount === this.cities.length;
+      this.checkAll = checkedCount === this.couponListAfterFilter.length;
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.cities.length;
+        checkedCount > 0 && checkedCount < this.couponListAfterFilter.length;
     },
+    async findCouponByUsername() {
+      let couponRes = await CouponServiceApi.findCouponByUsername(
+        stores.getUser().username.substring(1)
+      );
+      if (couponRes.code == 0) {
+        this.couponIdList = couponRes.data.map((coupon) => coupon.couponId);
+        this.checkedCouponIdList = [];
+        couponIdOList.length = 0;
+        couponRes.data.forEach((coupon) => couponIdOList.push(coupon.couponId));
+        this.couponList = couponRes.data;
+        this.couponListAfterFilter = couponRes.data;
+        this.page.total = this.couponListAfterFilter.length;
+        this.checkAll = false;
+        this.showCouponList = this.couponListAfterFilter.slice(
+          0,
+          this.page.pagesize
+        );
+      } else {
+        ElMessage.error(couponRes.message);
+      }
+    },
+    popTitle(title: string) {
+      this.checkAll = false;
+      this.checkedCouponIdList = [];
+      if (title == null || title == "") {
+        this.couponListAfterFilter = this.couponList;
+      } else {
+        this.couponListAfterFilter = this.couponList.filter((coupon) => {
+          return coupon.couponName.includes(title, 0);
+        });
+      }
+      this.page.currentPage = 1;
+      this.page.total = this.couponListAfterFilter.length;
+      this.showCouponList = this.couponListAfterFilter.slice(
+        0,
+        this.page.pagesize
+      );
+    },
+  },
+  mounted() {
+    this.findCouponByUsername();
   },
   setup() {
     // TODO: 之后通过axios获取数据，进行for循环创建标签处元素

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-01 17:26:11
- * @LastEditTime: 2021-04-10 12:22:54
+ * @LastEditTime: 2021-04-10 13:15:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\profile\Main\MsgDisplayMain\MsgListItem\MsgListItem.vue
@@ -9,7 +9,7 @@
 <template>
   <el-row class="container">
     <el-col :span="2">
-      <el-checkbox :label="msgObj.msgId"
+      <el-checkbox :label="couponItem.couponId"
         ><span class="msg_title_font"></span
       ></el-checkbox>
     </el-col>
@@ -18,10 +18,10 @@
         href="javascript:void(0);"
         type="primary"
         @click="showTitleBtn"
-        >{{ msgObj.msgName }}</el-link
+        >{{ couponItem.couponName }}</el-link
       >
     </el-col>
-    <el-col :span="4" class="msg_title_font">{{ msgObj.date }}</el-col>
+    <el-col :span="4" class="msg_title_font">{{ couponItem.deadline }}</el-col>
     <el-col :span="4" class="msg_title_font">
       <el-link type="primary" href="javascript:void(0);" @click="operatorBtn">
         点击{{}}
@@ -30,8 +30,8 @@
   </el-row>
   <el-row style="min-height: 100px" v-show="isShowTitle">
     <div class="msg_detail_container">
-      <p>{{ msgObj.msgContent }}</p>
-      <p>{{ msgObj.date }}</p>
+      <p>{{ couponItem.couponDetail }}</p>
+      <p>{{ couponItem.dadeadlinete }}</p>
     </div>
   </el-row>
 </template>
@@ -52,17 +52,18 @@ import { EmitsOptions } from "@vue/test-utils/dist/mount";
 import { MsgVo, MsgVoImpl } from "@/model/MsgEntity";
 import { prop } from "node_modules/vue-class-component/dist/vue-class-component";
 import { stores } from "@/utils/store/store";
+import { CouponVOImpl } from "@/model/CouponEntity";
 export default defineComponent({
   emits: ["operateBtn"],
   props: {
-    msgObj: {
-      type: Object,
+    couponItem: {
+      type: CouponVOImpl,
     },
   },
   setup(props, ctx: SetupContext<EmitsOptions>) {
     // const { isShowTitle, showTitleBtn } = useTitle(ctx);
     const _: any = inject("_");
-    const msg = ref(props.msgObj);
+    const msg = ref(props.couponItem);
     stores.isDebug ? console.log("[Msg List Item]=", "{msg}", msg) : "";
     watch(msg, (nn, oo) => {
       stores.isDebug ? console.log("[Msg List Item]=", "{msg}", msg) : "";

@@ -93,7 +93,7 @@ export default defineComponent({
       this.checkedMsgIdList = val
         ? this.msgListAfterFilter.map((msg) => msg.msgId)
         : [];
-      console.log(this.checkedMsgIdList);
+      // console.log(this.checkedMsgIdList);
       // this.checkAll = true;
       this.isIndeterminate = false;
     },
@@ -126,6 +126,8 @@ export default defineComponent({
     },
     popTitle(title: string) {
       stores.isDebug ? console.log("[Msg Display Main]", "{title}", title) : "";
+      this.checkAll = false;
+      this.checkedMsgIdList = [];
       if (title == null || title == "") {
         this.msgListAfterFilter = this.msgList;
       } else {
@@ -140,6 +142,7 @@ export default defineComponent({
             )
           : "";
       }
+      this.page.currentPage = 1;
       this.page.total = this.msgListAfterFilter.length;
       this.showMsgList = this.msgListAfterFilter.slice(0, this.page.pagesize);
     },
