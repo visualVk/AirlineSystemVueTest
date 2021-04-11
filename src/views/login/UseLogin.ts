@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-12 12:42:13
- * @LastEditTime: 2021-04-10 11:58:59
+ * @LastEditTime: 2021-04-10 15:24:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\views\login\UseLogin.ts
@@ -12,8 +12,10 @@ import { stores } from "@/utils/store/store"
 import { EmitsOptions } from "@vue/test-utils/dist/mount"
 import Axios from "axios"
 import { ElForm } from "element-plus"
-import { reactive, Ref, ref, SetupContext } from "vue"
+import { provide, reactive, Ref, ref, SetupContext } from "vue"
 import { Router } from "vue-router"
+import VueSocketIO from "vue-socket.io"
+import io from "socket.io-client";
 
 interface LoginUser {
   username: String,

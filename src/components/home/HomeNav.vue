@@ -65,7 +65,7 @@
               icon="el-icon-s-custom"
               style="color: #909399"
               @click="serviceBtn"
-              >客服中心</el-button
+              >问题集中地</el-button
             >
           </el-space>
         </el-row>

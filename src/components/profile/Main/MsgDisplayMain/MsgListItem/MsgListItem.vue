@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-01 17:26:11
- * @LastEditTime: 2021-04-10 12:22:54
+ * @LastEditTime: 2021-04-10 13:18:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-airline-01\src\components\profile\Main\MsgDisplayMain\MsgListItem\MsgListItem.vue
@@ -24,7 +24,7 @@
     <el-col :span="4" class="msg_title_font">{{ msgObj.date }}</el-col>
     <el-col :span="4" class="msg_title_font">
       <el-link type="primary" href="javascript:void(0);" @click="operatorBtn">
-        点击{{}}
+        删除
       </el-link>
     </el-col>
   </el-row>

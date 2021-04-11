@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="msg_container">
-      <el-row class="msg_title">
+      <!-- <el-row class="msg_title">
         <el-col :span="12">
           <span style="padding: 5px">所有问题</span>
         </el-col>
@@ -27,8 +27,8 @@
         <el-col :span="14" class="msg_title_font">主题</el-col>
         <el-col :span="4" class="msg_title_font">时间</el-col>
         <el-col :span="4" class="msg_title_font">操作</el-col>
-      </el-row>
-      <el-checkbox-group
+      </el-row> -->
+      <!-- <el-checkbox-group
         v-model="checkedQuestion"
         @change="handleCheckedCitiesChange"
       >
@@ -37,9 +37,12 @@
           :key="i"
           @titleBtn="titleBtn(i - 1)"
         ></QuestionListItem>
-      </el-checkbox-group>
-      <!--end  -->
-      <el-row style="text-align: center">
+      </el-checkbox-group> -->
+      <div>
+        <question-detail></question-detail>
+      </div>
+      <!-- end -->
+      <!-- <el-row style="text-align: center">
         <el-col :span="2"></el-col>
         <el-col :span="20">
           <el-pagination
@@ -53,7 +56,7 @@
           </el-pagination>
         </el-col>
         <el-col :span="2"></el-col>
-      </el-row>
+      </el-row> -->
     </div>
   </div>
 </template>
@@ -61,11 +64,13 @@
 <script lang="ts">
 import { defineComponent, inject, toRefs } from "vue";
 import QuestionListItem from "@/components/profile/Main/QuestionDisplayMain/QuestionListItem/QuestionListItem.vue";
-import { useQuestion } from "@/components/profile/Main/QuestionDisplayMain/UseQuestion.ts";
+import QuestionDetail from "@/components/profile/Main/QuestionDisplayMain/QuestionDetail/QuestionDetail.vue";
+import { useQuestion } from "@/components/profile/Main/QuestionDisplayMain/UseQuestion";
 
 export default defineComponent({
   components: {
     QuestionListItem,
+    QuestionDetail,
   },
   data() {
     return {
