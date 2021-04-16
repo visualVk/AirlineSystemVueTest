@@ -93,8 +93,9 @@ service.interceptors.request.use(async (config: AxiosRequestConfig) => {
     // 如果保存有token，则取，否则不添加Authorization
     if (stores.token != null && stores.token != '') {
       let token = stores.token
-      let tokenType = stores.tokenType
-      config.headers['Authorization'] = `${tokenType} ${token}`
+      // let tokenType = stores.tokenType
+      console.log(stores.token)
+      config.headers['Authorization'] = `${token}`
     }
   }
   // console.log(config);

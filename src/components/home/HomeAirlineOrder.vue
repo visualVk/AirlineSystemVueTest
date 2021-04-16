@@ -96,6 +96,9 @@ export default defineComponent({
     const orderObj = props.orderSearchObj;
     const isWarning = ref(false);
     const app = getCurrentInstance()?.appContext.config.globalProperties;
+    const disabledDate = (time) => {
+      return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+    };
     watch(orderObj, (oo, nn) => {
       if (nn.destination == nn.departure) {
         isWarning.value = true;
@@ -106,7 +109,7 @@ export default defineComponent({
         isWarning.value = false;
       }
     });
-    return { flag, options, isWarning };
+    return { flag, options, isWarning, disabledDate };
   },
 });
 
